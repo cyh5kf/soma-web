@@ -1,3 +1,4 @@
+import trim from 'lodash/trim';
 import warning from '../../utils/warning';
 import {formatDateLastSeen} from '../../utils/TimeUtils';
 
@@ -110,7 +111,11 @@ export function formatUserAccountLastSeen(userAccount,locale){
  * @returns {string}
  */
 export function gettNameFromContactJson(contactInfo){
-
     var name = [contactInfo.firstName, contactInfo.middleName, contactInfo.lastName].filter(n => !!n).join(' ');
-    return name;
+    name = name.trim();
+    if(name.length > 0){
+        return name;
+    }
+    var phone0 = contactInfo.phones[0] || {};
+    return phone0['number'] || '';
 }
