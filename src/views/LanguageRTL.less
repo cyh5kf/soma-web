@@ -1,0 +1,39 @@
+/*
+针对阿拉伯语等从右往左读写的语言的特殊处理
+*/
+
+.soma_web_language_ar{
+
+  .comp-ViewInput,
+  .accountName,
+  .session-last-msg,
+  .session-last-time,
+  .sys-msg-content,
+  .msg-sender-name,
+  .message-item-content,
+  .contentEditable,
+  .customWhatsUpContent,
+  .display-text{
+    direction: rtl;
+    text-align: left;
+  }
+
+  .message-item.text-msg .msg-time-status {
+    right: auto;
+    left: 11px;
+    padding-left: 0;
+    padding-right: 16px;
+  }
+
+  .session-name {
+    background-position: right center!important;
+    padding-right: 20px;
+    padding-left: 0!important;
+  }
+
+  .info-name {
+    direction: rtl;
+    justify-content: flex-end;
+  }
+
+}

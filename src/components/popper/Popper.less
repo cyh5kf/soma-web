@@ -1,0 +1,29 @@
+.popper {
+  @popper-offset: 7px;
+  z-index: 100;
+
+  &.top {
+    margin-bottom: @popper-offset;
+  }
+  &.bottom {
+    margin-top: @popper-offset;
+  }
+  &.left {
+    margin-right: @popper-offset;
+  }
+  &.right {
+    margin-left: @popper-offset;
+  }
+
+  .popper-content {
+    display: block;
+    transition-property: transform;
+    transition-duration: 200ms;
+    transform: scale(0);
+  }
+  &.style-applied {
+    .popper-content {
+      transform: scale(1);
+    }
+  }
+}

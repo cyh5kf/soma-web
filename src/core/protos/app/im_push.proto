@@ -1,0 +1,104 @@
+package app;
+option java_package="com.messenger.javaserver.impush.proto";
+
+import "app/mobrequestbase.proto";
+
+
+
+enum EPushMessageType{
+    //extends old MessageType
+    EPushMessageType_METION = 1015;
+}
+
+enum EDirectPushType{
+    //extends old MessageType
+    EDirectPushType_SYSTEM_MSG = 1;
+}
+
+
+message DirectPushRequest{
+    required int64 to_uid = 1;
+    required int32 direct_push_type = 2;
+    optional int64 from_uid = 3;
+    optional string from_name = 4;
+    optional bytes data = 5;//数据
+}
+
+message DirectPushResponse{
+    required int32 ret = 1;
+}
+
+
+message SendPushRequest{
+    required int64 to_uid = 1;
+    required string notify_method = 2;
+    required bytes data = 3;
+}
+message SendPushResponse
+{
+    required int32 ret = 1;
+}
+
+message GetPreparePushRequest {
+    required int64 to_uid = 1;
+}
+message GetPreparePushResponse {
+    required int32 ret = 1;
+    optional bool voip_push = 2;
+    optional uint64 push_id = 3;
+    optional uint64 push_server = 4;
+}
+
+message PrepareSendPushRequest{
+    required int64 to_uid = 1;
+    required string notify_method = 2;
+    required bytes data = 3;
+    optional bool voip_push = 4;
+    optional uint64 push_id = 5;
+    optional uint64 push_server = 6;
+}
+
+message PrepareSendPushResponse{
+    required int32 ret = 1;
+    required int64 to_uid = 2;
+    required string notify_method = 3;
+    required bytes data = 4;
+    optional bool voip_push = 5;
+    optional uint64 push_id = 6;
+    optional uint64 push_server = 7;
+}
+
+message AckPushRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 pushid = 3;
+    required uint64 pushserver = 4;
+}
+
+message AckPushResponse
+{
+    required int32 ret = 1;
+}
+//method: sendBatchPush
+message SendBatchPushRequest
+{
+    repeated int64 touid = 1;
+    repeated string notifymethod = 2;
+    repeated bytes data = 3;
+}
+message SendBatchPushResponse
+{
+    required int32 ret=1;
+}
+
+service ImPushService{
+    rpc directPush(DirectPushRequest) returns (DirectPushResponse);
+    rpc sendPush(SendPushRequest) returns (SendPushResponse);
+    rpc sendBatchPush(SendBatchPushRequest) returns (SendBatchPushResponse);
+
+    //for local push
+    rpc getPreparePush(GetPreparePushRequest) returns (GetPreparePushResponse);
+    rpc prepareSendPush(PrepareSendPushRequest) returns (PrepareSendPushResponse);
+    rpc ackPush(AckPushRequest) returns (AckPushResponse);
+
+}

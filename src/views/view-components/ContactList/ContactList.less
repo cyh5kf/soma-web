@@ -1,0 +1,48 @@
+.ContactList {
+
+  display: flex;
+  flex-direction: column;
+
+  .userList ,.empty-tips{
+    flex-grow: 1;
+    flex-shrink: 1;
+    overflow: auto;
+  }
+
+  .userList{
+    background-color: #FAFAFA;
+  }
+
+  .groupName {
+    height: 74px;
+    line-height: 74px;
+    color: #0099CC;
+    font-size: 22px;
+    text-indent: 29px;
+  }
+
+
+  .empty-tips{
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    display: flex;
+  }
+
+  .empty-icon{
+    background: url("./images/ic_group_add_black_60px.png");
+    background-size: cover;
+    width: 60px;
+    height: 60px;
+  }
+
+  .empty-text{
+    margin-top: 7px;
+    text-align: center;
+    height: 17px;
+    line-height: 17px;
+    color: fade(#000000,54);
+    font-size: 14px;
+  }
+
+}

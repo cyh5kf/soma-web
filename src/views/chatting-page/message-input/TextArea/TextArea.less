@@ -1,0 +1,56 @@
+.MessageInputView {
+
+  .TextArea {
+    font-size: 14px;
+    float: left;
+    position: relative;
+    border-radius: 5px;
+    background-clip: padding-box;
+    //background-color: #fff;
+    -webkit-box-flex: 1;
+    -ms-flex: 1 1 auto;
+    flex: 1 1 auto;
+    min-width: 0;
+    box-sizing: border-box;
+    padding-right: 0px;
+    margin-left: 15px;
+
+    .placeholder {
+      -webkit-user-select: none;
+      -moz-user-select: none;
+      -ms-user-select: none;
+      user-select: none;
+      position: absolute;
+      color: rgba(0, 0, 0, 0.38);
+      pointer-events: none;
+      -webkit-transition: opacity .08s linear;
+      transition: opacity .08s linear;
+      line-height: 20px;
+      z-index: 0;
+      top: 5px;
+      left: 0px;
+    }
+
+    .contentEditable {
+      word-wrap: break-word;
+      white-space: pre-wrap;
+      padding: 5px 2px 5px 0px;
+      min-height: 20px;
+      max-height: 111px;
+      overflow-y: auto;
+      overflow-x: hidden;
+      width: 100%;
+      min-height: 20px;
+      line-height: 20px;
+      border: none;
+      border-bottom: 1px solid #5EBCE6;
+      outline: none;
+    }
+
+    .emoji {
+      vertical-align: top;
+    }
+
+  }
+
+}

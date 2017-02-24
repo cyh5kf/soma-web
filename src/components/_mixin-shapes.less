@@ -1,0 +1,17 @@
+.triangle-top-left(@color, @width, @height: @width) {
+  border-style: solid;
+  border-width: 0 0 @height @width;
+  border-color: transparent transparent transparent @color;
+}
+
+.triangle-right(@color, @width, @height: @width) {
+  border-style: solid;
+  border-width: @height/2 0 @height/2 @width;
+  border-color: transparent transparent transparent @color;
+}
+
+.triangle-left(@color, @width, @height: @width) {
+  border-style: solid;
+  border-width: @height/2 @width @height/2 0;
+  border-color: transparent @color transparent transparent;
+}

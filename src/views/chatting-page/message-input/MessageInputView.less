@@ -1,0 +1,103 @@
+@import "../../../components/_variables";
+@import "../../../components/_mixins";
+
+.MessageInputView{
+
+  background: @color-bg-light;
+  box-shadow: 1px -1px 2px 0px rgba(0,0,0,0.10);
+  padding: 0;
+  position: relative;
+  border-left: 1px solid @color-split-line-msg-panel;
+
+  .clear{
+    clear: both;
+  }
+
+  .input-flex-wrapper{
+    padding: 15px 20px;
+    background:  @color-bg-light;
+    position: relative;
+  }
+
+  .input-flex{
+    display: flex;
+    flex-direction: row;
+    align-items: flex-end;
+  }
+
+  .flex-emojiPicker{
+    width: 24px;
+    height: 24px;
+    border: none;
+    outline: none;
+    background: url("./images/ic_emoji_24px.png");
+    background-size: cover;
+    cursor: pointer;
+    flex-grow: 0;
+    flex-shrink: 0;
+    position: relative;
+    margin-bottom: 2px;
+  }
+
+  .flex-textArea{
+    flex-shrink: 1;
+    flex-grow: 1;
+  }
+
+  .flex-obj{
+    margin-left: 15px;
+    width: 24px;
+    height: 24px;
+    border: none;
+    outline: none;
+    background-color: #d8f5f2;
+    cursor: pointer;
+    flex-grow: 0;
+    flex-shrink: 0;
+    overflow: hidden;
+  }
+
+  .ic_attachment{
+    background:url("./images/ic_attachment_24px.png");
+    background-size: cover;
+  }
+  
+  .ic_voice{
+    background: url("./images/ic_voice_24px.png");
+    background-size: cover;
+  }
+
+  .ic_voice_disabled{
+    opacity: 0.6;
+    cursor: not-allowed;
+  }
+
+  .ic_send_blue{
+    background: url("./images/ic_send_blue_24px.png");
+    background-size: cover;
+  }
+
+  .ic_send_black{
+    background: url("./images/ic_send_black_24px.png");
+    background-size: cover;
+    cursor: not-allowed;
+  }
+
+  .ic_hide_black{
+    background: url("./images/ic_hide_black_24px.png");
+    background-size: cover;
+  }
+
+
+
+
+  .isMute{
+    height: 96px;
+    line-height: 96px;
+    background: fade(#FFFFFF,48);
+    font-size: 20px;
+    text-align: center;
+    color: fade(#000000,54);
+  }
+
+}

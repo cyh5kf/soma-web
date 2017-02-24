@@ -1,0 +1,200 @@
+@import "../../../../components/common";
+@import "../../../../components/_variables";
+
+.ViewGroupInfo {
+  background-color: #f7f7f7 !important;
+
+  .hidden {
+    display: none;
+  }
+
+  .sessionLogo {
+    margin: 20px auto 0 auto;
+    .charAvatar {
+      font-size: 25px;
+    }
+  }
+
+  .groupName {
+    margin: 24px auto 0 auto !important;;
+    font-size: 16px !important;;
+    padding: 22px 15px !important;;
+    line-height: 22px;
+    //height: 96px;
+
+    .title {
+      color: fade(#000, 38);
+      height: 19px;
+    }
+  }
+
+  .groupMemberCount {
+    font-size: 14px;
+    color: fade(#000000, 38);
+    line-height: 17px;
+    height: 17px;
+    margin-top: 20px;
+    text-indent: 20px;
+    text-transform: uppercase;
+    width: @right-panel-width - 40px;
+  }
+
+  .groupMemberLoading {
+    height: 444px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+
+    .loadingIcon {
+      width: 36px;
+      height: 36px;
+      background: url("../../../../images/ic_cached_blue_80px.png");
+      background-size: cover;
+      animation: animatorCircle 0.8s infinite linear; /*匀速 循环*/
+    }
+  }
+
+  .content .groupMember.card {
+    margin-top: 9px !important;
+    padding: 0;
+
+    //.addMember {
+    //  padding-left: 20px;
+    //  cursor: pointer;
+    //  height: 74px;
+    //  display: flex;
+    //  flex-direction: row;
+    //  align-items: center;
+    //
+    //  .addIcon {
+    //    width: 48px;
+    //    height: 48px;
+    //    background-color: #FF7043;
+    //    border-radius: 100px;
+    //    flex-grow: 0;
+    //    flex-shrink: 0;
+    //
+    //    .addImg {
+    //      display: block;
+    //      width: 33px;
+    //      height: 33px;
+    //      margin: 0px auto;
+    //      background: url("./images/add.png");
+    //      background-size: cover;
+    //      margin-top: 7px;
+    //    }
+    //
+    //  }
+    //
+    //  .addText {
+    //    font-size: 16px;
+    //    color: fade(#000, 78);
+    //    margin-left: 10px;
+    //    box-shadow: 0px 1px 0px 0px rgba(222, 222, 222, 0.5);
+    //    flex-grow: 1;
+    //    flex-shrink: 1;
+    //    height: 74px;
+    //    line-height: 74px;
+    //  }
+    //
+    //  &:hover {
+    //    background: #F0F0F0;
+    //    .addIcon {
+    //      background-color: #E0623A;
+    //    }
+    //  }
+    //}
+
+    .showAllBtn {
+      .showAll {
+        margin-left: 80px;
+        height: 74px;
+        line-height: 74px;
+        color: #0099CC;
+        cursor: pointer;
+
+        &:hover {
+          color: #3594B3;
+        }
+      }
+    }
+
+  }
+
+  .ContactListItem {
+    &.isMe {
+      cursor: default;
+    }
+  }
+
+  .CommonListItem {
+    //稍微调整一下,在这个页面的设计中,距离左侧留白20px
+    //而其他页面的留白确实15px
+    .itemIcon {
+      left: 20px;
+      top: 12px;
+    }
+    .itemContent {
+      margin-left: 80px;
+    }
+  }
+
+
+  .addMemberItem, .createInviteItem {
+
+    .itemContent{
+      line-height: 37px;
+      color: fade(#000, 78);
+      font-size: 16px;
+    }
+
+    .iconWrapper {
+      width: 48px;
+      height: 48px;
+      background-color: #FF7043;
+      border-radius: 100px;
+      flex-grow: 0;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      .imgWrapper {
+        display: block;
+        width: 33px;
+        height: 33px;
+        background: url("./images/add.png");
+        background-size: cover;
+      }
+    }
+
+    &:hover {
+      background: #F0F0F0;
+      .iconWrapper {
+        background-color: #E0623A;
+      }
+    }
+  }
+
+
+  .createInviteItem {
+    display: none; //TODO 暂时隐藏
+    .iconWrapper {
+      background-color: #0099CC;
+      .imgWrapper {
+        width: 20px;
+        height: 20px;
+        background: url("./images/ic_share_white_20px.png");
+        background-size: cover;
+      }
+    }
+
+    &:hover {
+      .iconWrapper {
+        background-color: #0088BB;
+      }
+    }
+  }
+
+}

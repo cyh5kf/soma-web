@@ -1,0 +1,130 @@
+@import "../../../components/_variables";
+@import "../../../components/_mixins";
+
+.message-list-view {
+  position: relative;
+  overflow: auto;
+  background-color: @color-bg-msg-panel;
+  padding-bottom: 20px;
+  border-left: 1px solid @color-split-line-msg-panel;
+
+  &.empty-message-view {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 16px;
+    color: @color-light-text-hint;
+  }
+
+  .msg-timeline-wrapper {
+    margin-top: 20px;
+    text-align: center;
+    .msg-timeline-label {
+      padding: 6px 7px 5px;
+      display: inline-block;
+      border-radius: 3px;
+      font-size: 12px;
+      color: @color-light-text-hint;
+      background-color: @color-bg-light-blue;
+      box-shadow: rgba(0, 0, 0, .3) 0 0.5px 2px;
+    }
+  }
+
+  .sys-msg-wrapper {
+    margin-top: 20px;
+    text-align: center;
+    .sys-msg-content {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 2px;
+      font-size: 12px;
+      line-height: 14px;
+      background-color: @color-bg-sys-msg;
+      color: @color-white;
+    }
+    + .sys-msg-wrapper {
+      margin-top: 7px;
+    }
+  }
+
+  .msg-timeline-wrapper + .user-msgs-container {
+    margin-top: 20px;
+  }
+  .user-msgs-container {
+    position: relative;
+    margin-top: 16px;
+    padding-left: 28px;
+
+    .msg-sender-logo {
+      position: absolute;
+      left: 20px;
+      bottom: 0;
+      .circle(33px);
+      line-height: 33px;
+      background: lightblue;
+      cursor: pointer;
+    }
+
+    .msg-sender-name {
+      font-size: 14px;
+      line-height: 17px;
+      margin-left: 11px;
+      margin-bottom: 3px;
+      color: @color-light-text-hint;
+    }
+
+    .user-msg-list {
+      .clear-float();
+      .message-item {
+        float: left;
+        clear: both;
+        &:nth-child(n+2) {
+          margin-top: 4px;
+        }
+        &:last-child .message-item-content:after {
+          content: '';
+          position: absolute;
+          bottom: 9px;
+          right: 100%;
+          width: 8px;
+          height: 14px;
+          background: url(images/ic_triangle_left.png) no-repeat;
+          background-position: right center;
+          background-size: auto 17px;
+        }
+      }
+    }
+
+    &.own-msgs {
+      padding-left: 0;
+      padding-right: 28px;
+      .user-msg-list {
+        .message-item {
+          float: right;
+
+          &.text-msg .icon-msg-menu {
+            background: linear-gradient(to right, fade(@color-bg-light-green, 50), @color-bg-light-green 50%);
+          }
+          .message-item-content {
+            background-color: @color-bg-light-green;
+          }
+          &:last-child .message-item-content:after {
+            background-image: url(images/ic_triangle_right.png);
+            background-position: left center;
+            right: auto;
+            left: 100%;
+          }
+        }
+      }
+    }
+  }
+
+  &.group-chat {
+    .msg-timeline-wrapper + .user-msgs-container:not(.own-msgs) {
+      margin-top: 24px;
+    }
+    .user-msgs-container:not(.own-msgs) {
+      padding-left: 68px;
+    }
+  }
+}

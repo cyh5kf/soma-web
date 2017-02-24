@@ -1,0 +1,146 @@
+
+@COLOR_PROGRESS_FILL:#009BDF;
+
+.MediaContentVideo{
+  position: relative;
+
+  .videoThumbImg {
+    @WIDTH_THUMB_IMG: 288px;
+    @HEIGHT_THUMB_IMG: 192px;
+    width: @WIDTH_THUMB_IMG;
+    height: @HEIGHT_THUMB_IMG;
+    position: absolute;
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    margin-left: -(@WIDTH_THUMB_IMG/2);
+    margin-top: -(@HEIGHT_THUMB_IMG/2);
+    border-radius: 2px;
+  }
+
+
+  .video{
+    background-color: rgba(205, 205, 205, 0.17);
+  }
+
+  .video:focus{
+    outline: none;
+  }
+
+  .custom-video{
+
+    color: fade(#000000,54);
+
+    .video__control--focused, .video__control:focus, .video-controls button:focus {
+      outline: none;
+    }
+
+
+    .video__controls {
+      opacity: 1;
+      height: 50px;
+      background-color: fade(#FFFFFF,78);
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+    }
+
+    .video-play{
+      padding-right: 0px;
+    }
+
+    .video-play:hover {
+      background:none;
+    }
+
+    .video-time{
+      padding-left: 5px;
+    }
+
+    .video-mute:hover {
+      background:none;
+    }
+
+    .video-controls button{
+      color: #000;
+    }
+
+    .video__control{
+      font-size: 18px;
+      height: auto;
+    }
+
+    .video-time{
+      font-size: 12px;
+    }
+
+    .video-time__duration{
+      color: fade(#000000,54);
+    }
+
+
+    .video-seek__container{
+      height: 2px;
+    }
+
+    .video-mute__track0{
+      background-color: #8C8C8C;
+    }
+
+    .video-progress-bar--horizontal{
+      height: 2px;
+    }
+
+    .video-progress-bar__fill{
+      position: relative;
+      background-color: @COLOR_PROGRESS_FILL;
+
+      &::before{
+        content: "";
+        position: absolute;
+        right: -2px;
+        top:-5px;
+        width: 11px;
+        height: 11px;
+        background-color: @COLOR_PROGRESS_FILL;
+        border-radius: 100px;
+        display: block;
+      }
+    }
+
+
+
+    .video-mute{
+      width: 100px;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
+
+      button.video-mute__inner{
+        padding-right: 5px;
+      }
+
+      .video-progress-bar--horizontal {
+        width: 50px;
+        height: 2px;
+      }
+
+    }
+
+  }
+
+
+
+  video{
+    max-height: 576px;
+    max-width: 720px;
+    display: block;
+    margin: 0 auto;
+  }
+
+
+  .video{
+    display: block !important;
+  }
+
+}

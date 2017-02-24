@@ -1,0 +1,103 @@
+.view-medias-thumb{
+  width: 84px;
+  height: 84px;
+  cursor: pointer;
+  border: 2px solid #F7F7F7;
+  border-radius: 2px;
+  flex-grow: 0;
+  flex-shrink: 0;
+  position: relative;
+
+  &.current{
+    border: 2px solid #009BDF;
+  }
+
+  .thumb-img{
+    border: 1px solid #F7F7F7;
+    width: 100%;
+    height: 100%;
+  }
+
+
+
+  .playDuration{
+
+    background-color: fade(#000000,30);
+    position: absolute;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    width: 58px;
+    height: 18px;
+
+    .ic_video_white{
+      background: url("./images/ic_video_white_14px.png") ;
+      width: 14px;
+      height: 8px;
+      display: inline-block;
+      background-size: cover;
+      margin-left: 6px;
+    }
+
+    .time_text{
+      font-size: 12px;
+      color: #FFFFFF;
+      display: inline-block;
+      height: 18px;
+      padding-top: 4px;
+      //line-height: 18px;
+      margin-left: 5px;
+    }
+  }
+
+
+
+}
+
+.view-medias-thumbs{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  overflow: hidden;
+
+  height: 107px;
+  background-color: #F7F7F7;
+  box-shadow: 0px -1px 3px 0 fade(#000000,24);
+  flex-grow: 0;
+  flex-shrink: 0;
+
+
+  .thumb-left,.thumb-right,.thumb-current{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    overflow: hidden;
+    height: 107px;
+  }
+
+  .thumb-left{
+    flex-grow: 1;
+    flex-shrink: 1;
+    flex-direction: row-reverse;
+    .view-medias-thumb{
+      //float: right;
+    }
+  }
+
+  .thumb-right{
+    flex-grow: 1;
+    flex-shrink: 1;
+    .view-medias-thumb{
+      //float: left;
+    }
+  }
+
+  .thumb-current{
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: 84px;
+  }
+
+
+}

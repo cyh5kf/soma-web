@@ -1,0 +1,60 @@
+package app;
+option java_package="com.messenger.javaserver.websession.proto";
+//option optimize_for = LITE_RUNTIME;
+import "app/mobrequestbase.proto";
+import "app/account_app.proto";
+import "app/imgroupmsg.proto";
+
+
+enum WebSessionType {
+    WEB_SESSION_TYPE_P2P = 1;
+    WEB_SESSION_TYPE_GROUP = 2;
+}
+
+//单聊会话信息
+message WebP2pSessionInfoPB {
+    required uint64 uid = 1; //对方uid
+    required app.BabaAccountPB user_info = 2; //用户信息
+}
+
+//群聊会话信息
+message WebGroupSessionInfoPB {
+    required uint64 gid = 1; //群gid
+    required app.GroupInfoPB group_info = 2; //群信息
+}
+
+//会话信息
+message WebSessionInfoPB {
+    required uint32 type = 1; //WebSessionType
+    required bytes session_info = 2; //单聊或群聊
+    required uint64 update_time = 3; //更新时间
+}
+
+
+//获取会话列表
+message GetWebSessionListRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+}
+
+message GetWebSessionListResponse {
+    required int32 ret = 1;
+    repeated WebSessionInfoPB session = 2; //按更新时间排序
+}
+
+//删除会话
+message DeleteWebSessionRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required uint64 peer_id = 3;
+}
+
+message DeleteWebSessionResponse {
+    required int32 ret = 1;
+}
+
+
+service WebSessionService {
+    rpc getWebSessionList(GetWebSessionListRequest) returns(GetWebSessionListResponse);
+    rpc deleteWebSession(DeleteWebSessionRequest) returns (DeleteWebSessionResponse);
+}

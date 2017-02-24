@@ -1,0 +1,18 @@
+.loading-indicator {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  &.delayed {
+    opacity: 0;
+  }
+
+  svg {
+    display: block;
+  }
+
+  .blue-circle-loading {
+    background: url("../../images/ic_cached_blue_80px.png") center/contain no-repeat;
+    animation: animatorCircle 800ms linear infinite;
+  }
+}

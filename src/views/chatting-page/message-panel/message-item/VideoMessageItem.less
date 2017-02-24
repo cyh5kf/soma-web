@@ -1,0 +1,67 @@
+@import "../../../../components/_variables";
+@import "../../../../components/_mixins";
+
+.message-item.video-msg {
+  .message-item-content {
+    width: 294px;
+    height: 198px;
+    padding: 3px;
+
+    .video-thumbnail {
+      position: relative;
+      height: 100%;
+      background: none center/cover no-repeat;
+      cursor: pointer;
+      border-radius: 2px;
+      &:after {
+        content: '';
+        display: block;
+        .center-align();
+        .circle(50px);
+        background: #fff url(images/ic_play_black_18px.png) 19px center no-repeat;
+        background-size: 18px 22px;
+      }
+    }
+  }
+
+  .msg-time-status {
+    background-color: fade(@color-black, 30);
+    border: 0px solid transparent;
+    border-width: 0 6px;
+    color: @color-white;
+    line-height: 18px;
+    bottom: 7px;
+  }
+
+  &.own-msg.p2p-msg {
+    &.failed .msg-time-status,
+    &.sending .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_clock_white_16px.png);
+    }
+    &.sent .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_check_white_16px.png);
+    }
+    &.received .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_dblcheck_white_16px.png);
+    }
+  }
+  &.own-msg.group-msg {
+    &.failed .msg-time-status:not(.ts-placeholder),
+    &.sending .msg-time-status:not(.ts-placeholder) {
+      background: url(../../../view-components/images/msg-status-images/ic_clock_white_16px.png) center/contain no-repeat;
+    }
+  }
+
+  .icon-msg-menu {
+    top: 3px;
+    right: 3px;
+    width: 80px;
+    height: 40px;
+    background: linear-gradient(to top right, fade(@color-white, 0) 50%, fade(@color-black, 30) 100%);
+    .icon-content {
+      margin-top: 12px;
+      margin-right: 12px;
+      background: url(images/ic_next_pressed_6px_white.png) center/contain no-repeat;
+    }
+  }
+}

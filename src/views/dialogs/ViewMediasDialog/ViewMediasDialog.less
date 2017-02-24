@@ -1,0 +1,66 @@
+.dlg-ViewMediasDialog{
+
+    .view-medias-dialog {
+        position: fixed;
+        width: 100%;
+        height: 100%;
+        z-index: 10000;
+        background-color: #fff;
+        display: flex;
+        flex-direction: column;
+
+
+        .left-button,.right-button{
+            position: absolute;
+            z-index: 100;
+            top: 45%;
+
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background-color: #CDCDCD;
+            width: 50px;
+            height: 50px;
+            border-radius: 100px;
+            cursor: pointer;
+
+            &:hover{
+                background-color: #B4B4B4;
+            }
+
+            &.disabled{
+                background-color: #E5E5E5;
+                cursor: not-allowed;
+                &:hover{
+                    background-color: #E5E5E5;
+                }
+            }
+        }
+
+        .left-button{
+            left: 30px;
+            .left-icon{
+                width: 36px;
+                height: 36px;
+                background: url("./images/ic_left_pressed_white_36px.png");
+                background-size: cover;
+            }
+        }
+
+
+        .right-button{
+            right: 30px;
+            .right-icon{
+                width: 36px;
+                height: 36px;
+                background: url("./images/ic_right_pressed_white_36px.png");
+                background-size: cover;
+            }
+        }
+
+    }
+
+
+
+}
+

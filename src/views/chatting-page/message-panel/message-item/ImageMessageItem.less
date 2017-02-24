@@ -1,0 +1,72 @@
+@import "../../../../components/_variables";
+@import "../../../../components/_mixins";
+
+.message-item.image-msg {
+  .message-item-content {
+    width: 294px;
+    padding: 3px;
+
+    img {
+      width: 100%;
+      max-height: 100%;
+      vertical-align: top;
+      border-radius: 2px;
+
+      &.imgContent{
+        height: 100% !important;
+      }
+
+    }
+
+    .loading-indicator {
+      position: absolute;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background-color: transparent;
+    }
+  }
+
+  .msg-time-status {
+    background-color: fade(@color-black, 30);
+    border: 0px solid transparent;
+    border-width: 0 6px;
+    color: @color-white;
+    line-height: 18px;
+    bottom: 7px;
+    border-radius: 1px;
+  }
+
+  &.own-msg.p2p-msg {
+    &.failed .msg-time-status,
+    &.sending .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_clock_white_16px.png);
+    }
+    &.sent .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_check_white_16px.png);
+    }
+    &.received .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_dblcheck_white_16px.png);
+    }
+  }
+  &.own-msg.group-msg {
+    &.failed .msg-time-status:not(.ts-placeholder),
+    &.sending .msg-time-status:not(.ts-placeholder) {
+      background: url(../../../view-components/images/msg-status-images/ic_clock_white_16px.png) center/contain no-repeat;
+    }
+  }
+
+  .icon-msg-menu {
+    top: 3px;
+    right: 3px;
+    width: 80px;
+    height: 40px;
+    background: linear-gradient(to top right, fade(@color-white, 0) 50%, fade(@color-black, 30) 100%);
+    .icon-content {
+      margin-top: 12px;
+      margin-right: 12px;
+      background: url(images/ic_next_pressed_6px_white.png) center/contain no-repeat;
+    }
+  }
+}

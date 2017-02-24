@@ -1,0 +1,49 @@
+@import "../../../components/_variables";
+
+.message-panel {
+  display: flex;
+  flex-direction: column;
+
+  &.disable-actions {
+    .message-panel-header {
+      pointer-events: none;
+    }
+    .MessageInputView {
+      display: none;
+    }
+  }
+
+  &.empty-panel {
+    background-color: #f7f9fa;
+    border-left: 1px solid @color-split-line;
+    justify-content: center;
+    .empty-panel-tip {
+      text-align: center;
+      .empty-icons {
+        display: block;
+        background: url(images/ic_start_messaging.png) center/contain no-repeat;
+        max-width: 80%;
+        width: 439px;
+        height: 337px;
+        margin: 0 auto;
+      }
+      .empty-tip-text {
+        display: inline-block;
+        color: @color-light-text-secondary;
+        font-size: 24px;
+        font-weight: 300;
+        max-width: 479px;
+        padding: 40px 20px 0;
+      }
+    }
+  }
+
+  .message-panel-header {
+    flex-grow: 0;
+    flex-shrink: 0;
+  }
+
+  .message-list-view {
+    flex-grow: 1;
+  }
+}

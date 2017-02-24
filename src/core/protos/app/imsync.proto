@@ -1,0 +1,70 @@
+package app;
+option java_package="com.messenger.javaserver.imsync.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+
+import "app/immsgntf.proto";
+import "app/mobrequestbase.proto";
+
+//客户端连接成功后发送同步数据请求,服务器收到同步请求后先同步好友，然后同步离线消息
+//method: SyncMsg 
+message OffMessageSyncRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+}
+message OffMessageSyncResponse
+{
+	required int32 ret=1;
+}
+
+//method: AckBatchReceivedDel
+message AckDelOffMessageListRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	repeated MessageNtfPB msg=3;//data客户端不用送
+}
+message AckDelOffMessageListResponse
+{
+	required int32 ret=1;
+}
+
+//method: AckReceivedDel
+message AckDelMessageRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;//发送方uid
+    required MessageNtfPB msg=3;
+}
+message AckDelMessageResponse
+{
+   required int32 ret=1;//0==成功，失败需要客户端延迟5秒后重试
+}
+
+message LoadOffMsgListRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+}
+message LoadOffMsgListResponse
+{
+	required int32 ret=1;
+	repeated string  methods=2;
+	repeated bytes notifydatas=3;
+}
+
+//appid=imsync
+service IMSyncOffMsgService
+{
+	//客户端连接成功时收到服务器NeedSyncMsg时发送Sync消息
+    rpc SyncMsg(OffMessageSyncRequest) returns(OffMessageSyncResponse);
+    rpc AckDel(AckDelMessageRequest) returns (AckDelMessageResponse);
+    rpc AckBatchDel(AckDelOffMessageListRequest) returns (AckDelOffMessageListResponse);
+    rpc LoadMsgList(LoadOffMsgListRequest) returns(LoadOffMsgListResponse);
+}
+
+
+

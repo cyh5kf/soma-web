@@ -1,0 +1,39 @@
+.view-medias-item {
+  display: flex;
+  flex-grow: 1;
+  flex-shrink: 1;
+  flex-direction: column;
+  height: 100%;
+  width: 100%;
+
+  .media-wrapper {
+    display: flex;
+    flex-grow: 1;
+    flex-shrink: 1;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+
+    .comp-blue-loading{
+      display: none;
+      position: absolute;
+      z-index: 1;
+      top: 50%;
+      left: 50%;
+      margin-left: -50px;
+      margin-top: -50px;
+    }
+
+
+    &.media-loading-true {
+      .comp-blue-loading{
+        display: block;
+      }
+    }
+
+
+  }
+
+
+
+}

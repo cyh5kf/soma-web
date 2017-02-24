@@ -1,0 +1,95 @@
+package app;
+
+option java_package="com.messenger.javaserver.imgroupserver.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+
+//群消息类型定义枚举，主要为了区分各种群的系统消息，群的普通消息跟p2p保持一致
+enum EGroupMsgType
+{
+	//group系统消息
+    EGroupMsgType_SysBase=50;
+    EGroupMsgType_MemberEnter=51;//成员进入
+    EGroupMsgType_MemberLeave=52;//成员退出
+	EGroupMsgType_ModifyInfo=53;//群名称更改
+	EGroupMsgType_AvatarChange=54;//群头像更改
+	EGroupMsgType_LeaderChange=55;//群主转移
+	EGroupMsgType_GroupCreate=56;//创建群
+    EGroupMsgType_VoipInvite=57;//voip邀请
+    EGroupMsgType_VoipRoomState=58;//voip的room状态，此类型需要存离线
+    EGroupMsgType_VoipMemberState=59;//voip的成员状态，此类型只走在线通知
+}
+//群基础信息
+message GroupInfoPB
+{
+	required uint64 gid=1;//群ID
+	optional string name=2;//群名称，默认群名称为前四个用户的昵称，不显示自己的昵称
+	optional uint64 creator=3;//创建人
+	optional string avatar=4;//群头像由群主上传 否则使用默认头像
+	optional bool silent=5;//是否置为silent
+	optional uint64 update=6;//群更新时间
+	repeated uint64 manager=7;//管理员的uid
+	optional int32 type = 8;//群类型, 0:chat，1:voip
+	optional int32 membercount=9;//该群成员数量
+}
+//群用户信息
+message GroupUserPB
+{
+	required uint64 uid = 1;//用户ID
+	optional string nickName = 2;//不用 使用通讯录中设置的名字 如果通讯录中没有 显示通讯录的手机号码
+	optional string avatar = 3;//用户头像
+	optional int32 voipid = 4;//agora使用的uid，群内保持唯一，创建群或者加入新成员时由服务器生成
+	optional bool isVip = 5;//是否vip用户
+}
+//群全量消息对象
+message GroupFullInfoPB {
+	optional GroupInfoPB group = 1;
+	repeated GroupUserPB user = 2;
+}
+
+//====================================
+//======以下通知消息对象定义===========
+//====================================
+//用户建群消息对象
+message GroupCreateMsgPB
+{
+	required GroupUserPB operator=1;//发起人
+	repeated GroupUserPB usersAdd=2;//建群成员列表
+	optional string groupName=3;//创建群时群名
+}
+//用户入群消息对象
+message GroupMemberEnterMsgPB
+{
+	required GroupUserPB operator=1;//发起人
+	repeated GroupUserPB usersAdd=2;//入群成员列表
+	optional int32 source=3;//用户入群方式，0：普通加入；1：二维码加入 2：share link 加入
+}
+
+//用户退群消息对象
+message GroupMemberLeaveMsgPB
+{
+	required GroupUserPB operator=1;//发起人，可能发起人和接收人为同一人（主动退群），需客户端判断
+	required GroupUserPB userLeave=2;
+}
+
+//用户修改群名称消息对象
+message GroupRenameMsgPB
+{
+	required GroupUserPB operator=1;
+	required string gname=2;
+}
+
+//群主更新头像
+message GroupAvatarMsgPB
+{
+    required GroupUserPB operator=1;
+    required string avatarUrl=2;
+}
+
+//群主转移通知
+message GroupLeaderMsgPB
+{
+	required GroupUserPB leader=1;
+}

@@ -1,0 +1,66 @@
+
+//option optimize_for = LITE_RUNTIME;
+package app;
+option java_package="com.messenger.javaserver.imudpaccess.proto";
+
+/*
+const static uint8_t kUDPCMDTYPE_REQ=0;
+const static uint8_t kUDPCMDTYPE_REQRSP=1;//服务器收到后应答
+const static uint8_t kUDPCMDTYPE_RSPNTF=2;//服务器收到并执行完成后应答
+const static uint8_t kUDPCMDTYPE_ONEWAYNTF=3;//不需要应答的通知
+const static uint8_t kUDPCMDTYPE_NTF=4;//需要收到数据应答的通知
+const static uint8_t kUDPCMDTYPE_HEALTHCHECK=5;//需要收到数据应答的通知
+const static uint8_t kUDPCMDTYPE_AUTHNEED=6;//服务器重启后丢失session，通知客户端重发认证请求
+const static uint8_t kUDPCMDTYPE_SRVKEYNTF=7;//服务器下发eccpubkey需要收到数据应答的通知
+const static uint8_t kUDPCMDTYPE_ACKRCV=8;
+const static uint8_t kUDPCMDTYPE_ADJUSTTIME=9;
+const static uint64_t kUDPServerUID=1000;
+
+
+struct UDPSocketHeader
+{
+    uint8_t ver;
+    uint8_t cmdtype;
+    uint16_t flag;//1==encrypt
+    uint32_t cmdid;
+    uint64_t uid;
+    uint64_t seq;
+};
+*/
+
+message IMRpcUdpProxyRequest
+{
+	required uint64 seq=1;
+    required uint64 uid=2;
+	optional bytes  param=3;
+	optional int32  devtype=4;
+}
+message IMRpcUdpProxyResponse
+{
+	required int32 ret=1;
+	required uint64 seq=2;//协议头里面的那个seq，为了验证安全用 
+	optional bytes rspdata=3;
+}
+
+message IMClientInfo
+{
+	optional string cliver=1;
+	optional string devuuid=2;
+	optional int32  nettype=3;
+	optional string machinemodel=4;//机器信息
+	optional string osver=5;
+}
+
+//NTF
+//给某个UID发送命令
+//method: MsgNotify2Client
+message Notify2ClientMsg
+{
+    required uint64 uid=2;
+    optional uint32 hostid=3;
+    optional bool   sendpush=4;
+    optional bool  offsaveflag=5;
+    required string method=102;//通知客户端的method
+    required bytes parameter=103;
+}
+

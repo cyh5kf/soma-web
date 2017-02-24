@@ -1,0 +1,122 @@
+package app;
+option java_package="com.messenger.javaserver.misc.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+
+import "app/mobrequestbase.proto";
+
+// report type
+enum EREPORTTYPE
+{
+	EREPORTTYPE_ILLEGALAVATAR=0;    // 头像不合法
+	EREPORTTYPE_HARASS=1;           // 骚扰用户
+}
+
+
+// 获取聊天背景图片列表
+// method: getChatBackgroundList
+message GetChatBackgroundListRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required uint32 width=3;             // 请求的背景图片的原图宽度
+	required uint32 height=4;            // 请求的背景图片的原图高度
+	required uint32 thumb_width=5;       // 请求的背景图的缩略图的宽度
+	required uint32 thumb_height=6;      // 请求的背景图的缩略图的高度
+}
+message GetChatBackgroundListResponse
+{
+	required int32 ret=1;
+	optional string version=2;       // 返回的背景图的版本
+	repeated string images=3;        // 返回的背景图原图的URL列表
+	repeated string thumbs=4;        // 返回的背景图缩略图的URL列表
+}
+
+
+//home页面广告信息PB，需要根据客户端语言来返回
+message HomePageAdInfoPB
+{
+    required int64 ad_id=1;  //广告id，唯一
+    required string pic_url=2;  //广告图片链接
+    required string page_link_url=3;  //广告页面链接
+    required int64 expire=4;  //有效时间，单位：分钟
+}
+
+//home应用广告信息PB，需要根据客户端语言来返回
+message HomeAppAdInfoPB
+{
+    required int64 ad_id=1;  //广告id，唯一
+    required string pic_url=2;  //广告图片链接
+    required string app_logo_url=3;  //广告logo链接
+    required string app_title=4;  //广告标题
+    required string app_download_url=5;  //app下载链接
+    required int64 expire=6;  //有效时间，单位：分钟
+}
+
+// 获取首页广告信息
+message GetHomeAdInfoRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+}
+message GetHomeAdInfoResponse
+{
+	required int32 ret=1;
+    optional int32 ad_type=2;  //0:page，1:app
+    optional bytes ad_info=3;  //对应HomePageAdInfoPB和HomeAppAdInfoPB
+}
+
+//game center广告
+//home应用广告信息PB，需要根据客户端语言来返回
+message GameCenterAdInfoPB
+{
+    required int64 ad_id=1;  //广告id，唯一
+    required string app_abstract=2;  //简介
+    required string app_logo_url=3;  //广告logo链接
+    required string app_title=4;  //广告标题
+    required string app_download_url=5;  //app下载链接
+    optional int64 app_players = 6; // 玩家数
+    optional string app_open = 7; // ios打开协议或安卓包名
+
+}
+message GetGameCenterAdInfoRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+}
+message GetGameCenterAdInfoResponse
+{
+    required int32 ret=1;
+    repeated GameCenterAdInfoPB ad_info=2;
+}
+
+message GameCenterJointAdInfoPB
+{
+    required GameCenterAdInfoPB base = 1;
+    repeated string cover_url = 2;
+}
+
+message GetGameCenterJointAdInfoRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+}
+message GetGameCenterJointAdInfoResponse
+{
+    required int32 ret=1;
+    repeated GameCenterJointAdInfoPB ad_info=2;
+}
+
+
+
+// service
+// backendapps.miscproxy
+service MiscApp
+{
+	rpc getChatBackgroundList(GetChatBackgroundListRequest)returns(GetChatBackgroundListResponse);
+    rpc getHomeAdInfo(GetHomeAdInfoRequest)returns(GetHomeAdInfoResponse);
+    rpc getGameCenterAdInfo(GetGameCenterAdInfoRequest)returns(GetGameCenterAdInfoResponse);
+    rpc getGameCenterJointAdInfo(GetGameCenterJointAdInfoRequest)returns(GetGameCenterJointAdInfoResponse);
+}

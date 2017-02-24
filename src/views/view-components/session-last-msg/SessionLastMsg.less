@@ -1,0 +1,51 @@
+@import "../../../components/_variables";
+@import "../../../components/_mixins";
+
+.session-last-msg {
+  padding-top: 2px;
+  margin-top: -2px;
+  .single-line-text();
+  font-size: 14px;
+  color: @color-light-text-secondary;
+  .emoji {
+    position: relative;
+    top: -2px;
+  }
+  .msg-sender-info {
+    color: @color-blue;
+  }
+  .sys-msg-display {
+    display: inline-block;
+    width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: @color-blue;
+    font-weight: normal;
+  }
+  .msg-status-icon,
+  .msg-type-icon {
+    display: inline-block;
+    background: none center/contain no-repeat;
+    width: 16px;
+    height: 16px;
+    margin-right: 4px;
+    vertical-align: top;
+  }
+  .msg-status-icon {
+    &.sending, &.failed { background-image: url(../images/msg-status-images/ic_clock_black_16px.png); }
+    &.sent { background-image: url(../images/msg-status-images/ic_check_black_16px.png); }
+    &.received { background-image: url(../images/msg-status-images/ic_dblcheck_black_16px.png); }
+    &.read { background-image: url(../images/msg-status-images/ic_dblcheck_blue_16px.png); }
+  }
+  .msg-type-icon {
+    &.image-msg { background-image: url(images/ic_photo_camera_black_16px.png); }
+    &.audio-msg { background-image: url(images/ic_voice_black_16px.png); }
+    &.video-msg { background-image: url(images/ic_videocam_black_16px.png); }
+    &.location-msg { background-image: url(images/ic_place_black_16px.png); }
+    &.contact-msg { background-image: url(images/ic_person_black_16px.png); }
+  }
+
+  .other-msg-display {
+    margin-right: 4px;
+  }
+}

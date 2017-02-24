@@ -1,0 +1,81 @@
+package app;
+
+option java_package="com.messenger.javaserver.useractive.proto";
+import "app/mobrequestbase.proto";
+
+message UploadUserActiveStatusRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;//发送方uid
+    required int32 activeStatus = 3;//用户活跃状态，1 表示活跃，2表示不活跃
+}
+
+message UploadUserActiveStatusResponse{
+    required int32 ret=1;
+}
+
+
+//method UserActiveStatusChangeNtf
+message UserActiveStatusChangeNotify{
+    required uint64 uid=1;//用户
+    required int32 activeStatus = 2;//用户活跃状态 1.活跃 2.不活跃
+    optional uint64 lastSeenTime = 3;//用户上次看的时间
+}
+
+message GetLastSeenTimeAndSubsribeRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 targetUid=3;//聊天uid
+    optional bool isSubscribe = 4;//是否订阅
+}
+
+
+message GetLastSeenTimeAndSubsribeResponse{
+    required int32 ret=1;
+    optional bool allow_show = 2;
+    optional int32 activeStatus = 3;//用户活跃状态 1.活跃 2.不活跃
+    optional uint64 lastSeenTime = 4;
+    optional bool userExist = 5;
+}
+
+message UnsubscribeUserActiveRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 targetUid=3;//聊天uid
+}
+
+message UnsubscribeUserActiveResponse{
+    required int32 ret=1;
+}
+
+message GetBatchUserLastSeenRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    repeated uint64 targetUids = 3;
+}
+
+message UserLastSeenKV{
+    required uint64 uid = 1;
+    required bool allowShow = 2;
+    optional uint64 lastSeenTime = 3;
+    optional bool   online=4;//true表示在线
+}
+
+message GetBatchUserLastSeenResponse{
+    required int32 ret=1;
+    repeated UserLastSeenKV userLastSeenKVs = 2;
+}
+
+
+
+
+
+service BabaUserActiveApp{
+    rpc uploadUserActiveStatus(UploadUserActiveStatusRequest)returns(UploadUserActiveStatusResponse);
+    //接口返回lastSeenTime，并对用户状态进行订阅
+    rpc getLastSeenTimeAndSubsribe(GetLastSeenTimeAndSubsribeRequest)returns(GetLastSeenTimeAndSubsribeResponse);
+    //退订用户状态
+    rpc unsubscribeUserActive(UnsubscribeUserActiveRequest)returns(UnsubscribeUserActiveResponse);
+    //批量得到用户的lastSeen
+    rpc getBatchUserLastSeen(GetBatchUserLastSeenRequest)returns(GetBatchUserLastSeenResponse);
+    
+}

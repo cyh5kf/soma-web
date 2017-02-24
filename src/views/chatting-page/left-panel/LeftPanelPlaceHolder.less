@@ -1,0 +1,46 @@
+@import "../../../components/_variables";
+
+.LeftPanelPlaceHolder{
+  width: @left-panel-width;
+  height: 100%;
+  position: absolute;
+  top: 0;
+  left: 0;
+  bottom: 0;
+  right: 0;
+  z-index: 10;
+  overflow: hidden;
+
+
+  .PanelList{
+    width: @left-panel-width;
+    height: 100%;
+  }
+
+  .PanelWrapper{
+
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: @left-panel-width;
+
+
+    transform: translateX(-100%);
+    transition-property: transform;
+    transition-duration: 200ms;
+    transition-timing-function:ease-in;
+    &.active{
+      transform: translateX(0px);
+    }
+  }
+
+  .leftPanel{
+    width: @left-panel-width;
+    height: 100%;
+    background-color: #ffffff;
+    display: flex;
+    flex-direction: column;
+  }
+
+}

@@ -1,0 +1,116 @@
+package app;
+option java_package="com.messenger.javaserver.location.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+
+//===地理位置搜索===
+message UserLocationPB{
+	optional uint64 uid = 1;
+	optional double latitude=2;
+	optional double longitude=3;
+	optional string name=4;
+	optional string vicinity=5;
+	optional string reference=6;
+	optional string description=7;
+}
+
+//获取地理位置
+message GetAddressRequest
+{
+	required uint64 uid = 2;
+	required double latitude=3;
+	required double longitude=4;
+	required string language=5;
+}
+message GetAddressResponse
+{
+	required int32 ret = 1;
+	optional UserLocationPB location = 2;
+}
+
+//查找感兴趣的位置
+message GetInterestPointRequest
+{
+	required uint64 uid = 2;
+	required double latitude=3;
+	required double longitude=4;
+	required string language=5;
+	required string searchWord=6;
+}
+message GetInterestPointResponse
+{
+	required int32 ret = 1;
+	repeated UserLocationPB locations = 2;
+}
+
+
+//获取附近的点
+message GetNearBypointRequest
+{
+	required uint64 uid = 2;
+	required double latitude=3;
+	required double longitude=4;
+	required string language=5;
+	optional string pagetoken=6;//将服务器返回的分页token传回
+
+}
+message GetNearBypointResponse
+{
+	required int32 ret = 1;
+	repeated UserLocationPB locations = 2;
+	optional string pagetoken=3;//服务器返回分页token
+}
+
+//获取客户端的坐标，不精准
+message GeoLocationRequest
+{
+	required uint64 uid = 2;
+	optional string geoJson=3; //google请求参数,json格式如下：
+	/*{
+		"homeMobileCountryCode": 310,
+		"homeMobileNetworkCode": 260,
+		"radioType": "gsm",
+		"carrier": "T-Mobile",
+		"cellTowers": [
+			{
+				"cellId": 39627456,
+				"locationAreaCode": 40495,
+				"mobileCountryCode": 310,
+				"mobileNetworkCode": 260,
+				"age": 0,
+				"signalStrength": -95
+			}
+		],
+		"wifiAccessPoints": [
+			{
+				"macAddress": "01:23:45:67:89:AB",
+				"signalStrength": 8,
+				"age": 0,
+				"signalToNoiseRatio": -65,
+				"channel": 8
+			},
+			{
+				"macAddress": "01:23:45:67:89:AC",
+				"signalStrength": 4,
+				"age": 0
+			}
+		]
+	}*/
+}
+message GeoLocationResponse
+{
+	required int32 ret = 1;
+	optional double latitude=2;
+	optional double longitude=3;
+}
+// appid=locationproxy
+service LocationApp
+{
+	rpc getAddress(GetAddressRequest)returns(GetAddressResponse);
+	rpc getInterestPoint(GetInterestPointRequest)returns(GetInterestPointResponse);
+	rpc getNearBypoint(GetNearBypointRequest)returns(GetNearBypointResponse);
+	rpc geoLocation(GeoLocationRequest)returns(GeoLocationResponse);
+}
+

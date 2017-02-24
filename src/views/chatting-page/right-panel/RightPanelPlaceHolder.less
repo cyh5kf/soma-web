@@ -1,0 +1,140 @@
+@import "../../../components/_variables";
+
+.RightPanelPlaceHolder {
+  height: 100%;
+  width: 0px;
+  position: relative;
+  transition-property: width;
+  transition-duration: 100ms;
+  transition-timing-function:ease-in;
+  overflow: hidden;
+  flex-shrink: 0;
+  flex-grow: 0;
+
+  &.active{
+    width: @right-panel-width !important;
+  }
+
+  .PanelList {
+    height: 100%;
+    width: @right-panel-width;
+  }
+  .PanelWrapper {
+    height: 100%;
+    overflow: hidden;
+    width: @right-panel-width;
+  }
+  .rightPanel {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: @right-panel-width;
+    height: 100%;
+    background-color: #FFFFFF;
+    display: flex;
+    flex-direction: column;
+
+    .content {
+      width: @right-panel-width;
+      border-left: 1px solid @color-split-line-msg-panel;
+      margin: 0 auto;
+      overflow-y: auto;
+      overflow-x: hidden;
+      flex-shrink: 1;
+      flex-grow: 1;
+
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+
+
+      .flex-cell {
+        flex: 0 0 auto;
+      }
+
+      .redBtnTop{
+        min-height: 62px;
+        width: 90%;
+        flex-grow: 1;
+        flex-shrink: 1;
+      }
+
+      .redBtnWrapper{
+        flex-grow: 0;
+        flex-shrink: 0;
+        height: @right-panel-redbtn-height + 62px;
+      }
+
+    }
+
+    .card {
+      background-color: #ffffff;
+      width: @right-panel-width - 40px;
+      border-radius: 2px;
+      margin: 20px auto 0 auto;
+      padding: 0 15px;
+      flex: 0 0 auto;
+    }
+
+    .infoItem {
+      margin: 0 auto;
+      height: 70px;
+      line-height: 70px;
+      box-shadow: 0 1px 0 0 #DEDEDE;
+      font-size: 16px;
+
+      &:last-child {
+        box-shadow: none;
+      }
+
+      .title {
+        color: fade(#000, 38);
+        float: left;
+        text-transform:capitalize;
+      }
+
+      .title78 {
+        color: fade(#000, 78);
+      }
+
+      .children {
+        float: right;
+        color: fade(#000, 78);
+        height: 70px;
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+      }
+
+      &.linkStyle {
+        cursor: pointer;
+        &:hover {
+          color: #0099CC;
+        }
+      }
+    }
+
+    .btn-big-red {
+      background-color: #FF7043;
+      color: #ffffff;
+      border: 0px;
+      outline: none;
+      width: @right-panel-width - 40px;
+      height: @right-panel-redbtn-height;
+      line-height: @right-panel-redbtn-height;
+      margin: 0px auto;
+      padding: 0;
+      display: block;
+      border-radius: 4px;
+      cursor: pointer;
+      text-transform:capitalize;
+
+      &:hover {
+        background-color: #E0623A;
+      }
+
+    }
+
+  }
+
+}

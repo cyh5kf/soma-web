@@ -1,0 +1,66 @@
+@import "../../../../components/_variables";
+@import "../../../../components/_mixins";
+
+.message-item.audio-msg .message-item-content {
+  @item-height: 57px;
+  @play-btn-left: 11px;
+  @play-btn-size: 35px;
+  @play-line-left: @play-btn-left + @play-btn-size + 12px;
+  position: relative;
+  width: 294px;
+  height: @item-height;
+
+  .audio-play-btn {
+    .circle(@play-btn-size);
+    position: absolute;
+    top: (@item-height - @play-btn-size) / 2;
+    left: @play-btn-left;
+    background: @color-bg-msg-audio-btn url(images/ic_play_white_13px.png) 13px 10px no-repeat;
+    background-size: 13px 16px;
+    cursor: pointer;
+    &.playing {
+      background-image: url(images/ic_pause_white_13px.png);
+      background-position: 11px 10px;
+    }
+  }
+
+  .audio-play-info {
+    @play-dot-size: 11px;
+    position: absolute;
+    top: 17px;
+    left: @play-line-left + @play-dot-size / 2;
+    right: 12px;
+    height: @play-dot-size;
+    .audio-baseline,
+    .audio-played-line {
+      .center-align(false, true);
+      left: 0;
+      height: 1px;
+    }
+    .audio-baseline {
+      width: 100%;
+      background-color: fade(#b9b9b9, 60);
+    }
+    .audio-played-line {
+      width: 0;
+      background-color: @color-bg-msg-audio-btn;
+    }
+    .audio-played-dot {
+      position: absolute;
+      top: 0;
+      left: 0;
+      .circle(@play-dot-size);
+      transform: translate(-50%, 0);
+      background-color: @color-bg-msg-audio-btn;
+    }
+  }
+
+  .audio-duration {
+    position: absolute;
+    top: 37px;
+    left: @play-line-left;
+    font-size: 12px;
+    line-height: 16px;
+    color: @color-light-text-hint;
+  }
+}

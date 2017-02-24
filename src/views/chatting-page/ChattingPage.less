@@ -1,0 +1,114 @@
+@import "../../components/_variables";
+@import "../../components/_mixins";
+
+body.chatting-page-loading {
+  #app,
+  .app-content {
+    width: 100%;
+    height: 100%;
+    max-width: auto;
+    max-height: auto;
+    margin: 0;
+    box-shadow: none;
+    background-color: @color-white;
+
+    .loading-indicator {
+      height: 100%;
+    }
+  }
+}
+
+.chatting-page {
+  position: relative;
+  display: flex;
+  width: 100%;
+  height: 100%;
+  background: #FFFFFF;
+
+  .chatting-page-left-panel {
+    @header-height: 59px;
+    position: relative;
+    flex-grow: 0;
+    flex-shrink: 0;
+    width: @left-panel-width;
+    height: 100%;
+
+    .chatting-page-left-panel-content {
+      width: 100%;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      .user-header-bar,
+      .warn-tip-animator,
+      .recent-search,
+      .GsearchBox {
+        flex-shrink: 0;
+      }
+      .recent-sessions,
+      .GlobalSearch {
+        flex-grow: 1;
+        flex-shrink: 1;
+        overflow-y: auto;
+      }
+
+      .user-header-bar {
+        height: @header-height;
+      }
+
+      .warn-tip-animator {
+        .warn-tip {
+          position: relative;
+          transition-property: height;
+          transition-duration: 500ms;
+          overflow: hidden;
+          height: 0;
+          padding: 0 10px 0 81px;
+          .warn-tip-icon {
+            position: absolute;
+            top: 22px;
+            left: 15px;
+            .circle(46px);
+            background: @color-white center/contain no-repeat;
+            background-size: 24px 24px;
+          }
+          .tip-title {
+            font-size: 16px;
+            color: @color-light-text;
+            padding-top: 23px;
+            padding-bottom: 4px;
+          }
+          .tip-subtitle {
+            font-size: 14px;
+            color: @color-light-text-secondary;
+            &.clickable {
+              text-decoration: underline;
+              cursor: pointer;
+            }
+          }
+          &.offline-tip {
+            background-color: @color-bg-offline-tip;
+            .warn-tip-icon {
+              background-image: url(images/ic_internet_error_yellow_24px.png);
+            }
+          }
+          &.notification-disabled-tip {
+            background-color: @color-bg-ntf-tip;
+            .warn-tip-icon {
+              background-image: url(images/ic_notifications_off_blue_24px.png);
+            }
+          }
+        }
+        &.active {
+          .warn-tip {
+            height: 90px;
+          }
+        }
+      }
+    }
+  }
+
+  .message-panel {
+    min-width: 0;
+    flex-grow: 1;
+  }
+}

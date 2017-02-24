@@ -1,0 +1,58 @@
+package app;
+
+option java_package="com.messenger.javaserver.webrpc.proto";
+
+//option optimize_for = LITE_RUNTIME;
+option cc_generic_services = false;
+option java_generic_services = false;
+
+enum WebRpcMessageType
+{
+    WEB_RPC_MESSAGE_TYPE_REQUEST = 0;
+    WEB_RPC_MESSAGE_TYPE_RESPONSE = 1;
+    WEB_RPC_MESSAGE_TYPE_NOTIFY = 2;
+};
+
+enum WebRpcError
+{
+    WEB_RPC_ERROR_OK = 0;
+    WEB_RPC_ERROR_SYSTEM_ERROR = 1;             // 系统错误，server端异常，一些没有其他ErrorCode的server异常，都可用该code
+    WEB_RPC_ERROR_DATABASE_ERROR = 2;           // server端数据库异常
+    WEB_RPC_ERROR_SESSION_TIMEOUTED = 3;        // accessToken过期
+    WEB_RPC_ERROR_USER_NOT_EXISTED = 4;         // 由于不想让用户知道是密码错误还是用户名不存在，所以一律返回该错误码
+    WEB_RPC_ERROR_FAILED_ACCESS_RESOURCE = 5;   // 资源访问失败
+    WEB_RPC_ERROR_PERMISSION_DENIED = 6;        // 该操作用户没有权限
+    WEB_RPC_ERROR_INVALID_PARAM = 7;            // 请求包含错误参数
+    WEB_RPC_ERROR_PASSWORD_ERROR = 18;          // 密码错误
+    WEB_RPC_ERROR_USER_PROHIBIT = 19;           // 系统禁止登陆
+    WEB_RPC_ERROR_USER_LOGINED_OTHERDEVICE = 20;// 账户在其他地方登陆了
+    WEB_RPC_ERROR_USER_TEMPPROHIBIT = 21;       // 系统临时禁止登陆,如IP过于频繁
+};
+
+message WebRpcMessage
+{
+    required uint32 type = 1; //消息类型，见WebRpcMessageType
+    required uint32 seq = 2; //序列号，用于请求和应答的对应
+    required string method = 3; //方法名，格式：service.rpc
+    optional uint32 error = 4; //错误码，用于response，见WebRpcError
+    optional bytes param = 5;  //数据
+};
+
+/*
+特殊rpc message的定义
+
+1）Heartbeat ping
+type = WEB_RPC_MESSAGE_TYPE_REQUEST
+seq = 客户端递增
+method = "heartbeat"
+error = null
+param = null
+
+2）Heartbeat pong
+type = WEB_RPC_MESSAGE_TYPE_RESPONSE
+seq = 对应ping中的seq
+method = "heartbeat"
+error = WebRpcError定义
+param = null
+
+*/

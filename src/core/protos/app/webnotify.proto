@@ -1,0 +1,47 @@
+package app;
+option java_package="com.messenger.javaserver.webnotify.proto";
+
+import "app/mobrequestbase.proto";
+
+
+message AckWebNotifyRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required string notify_uuid = 3;
+}
+
+message AckWebNotifyResponse {
+    required int32 ret = 1;
+}
+
+
+enum WebNotifyType {
+    WEB_NOTIFY_TYPE_MESSAGE_NTF = 0; //对应MessageNtfPB
+}
+
+//sync数据PB
+message WebNotifyPB {
+    required string notify_uuid = 1; //离线数据的uuid
+    required int32 type = 2; //WebNotifyType
+    required bytes data = 3; //对应的具体PB
+    required uint64 srv_time = 4;
+}
+
+
+//sync请求
+message SyncWebNotifyRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+}
+
+message SyncWebNotifyResponse {
+    required int32 ret = 1;
+    required int32 is_end = 2; //是否结束, 0:未结束,1:结束
+    repeated WebNotifyPB notify = 3;
+}
+
+
+service WebNotifyService {
+    rpc ackWebNotify(AckWebNotifyRequest) returns (AckWebNotifyResponse);
+    rpc syncWebNotify(SyncWebNotifyRequest) returns (SyncWebNotifyResponse);
+}

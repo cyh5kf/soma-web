@@ -1,0 +1,37 @@
+@import "../../../../components/_variables";
+@import "../../../../components/_mixins";
+
+.message-item.contact-card-msg .message-item-content {
+  width: 266px;
+  height: 106px;
+
+  &.isContactSomaUser{
+    cursor: pointer;
+  }
+
+  .contact-card-info {
+    padding: 12px 11px;
+    border-bottom: 1px solid fade(@color-split-line-darker, 38);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    line-height: 50px;
+    font-size: 16px;
+    color: @color-light-text-primary;
+    .accountAvatar {
+      display: inline-block;
+      .circle(50px);
+      line-height: inherit;
+      margin-right: 6px;
+      font-size: 24px;
+      vertical-align: top;
+    }
+  }
+
+  .contact-card-desc {
+    padding-left: 11px;
+    font-size: 12px;
+    line-height: 30px;
+    color: @color-light-text-hint;
+  }
+}

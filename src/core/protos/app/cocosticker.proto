@@ -1,0 +1,87 @@
+package app;
+option java_package="com.messenger.javaserver.sticker.proto";
+
+option java_outer_classname = "StickerProto";
+//option optimize_for = LITE_RUNTIME;
+
+import "app/mobrequestbase.proto";
+
+message StickerPB {
+	optional uint64 sid = 1;//Sticker ID
+	optional int32 type = 2;//1:gif
+	optional int32 supportType = 3;//支持设备类型 1:Android 2:iOS 255:All
+	optional string title = 4;//Sticker主题
+	optional string description = 5;//Sticker描述
+	optional int32 availabilityTime = 6;//可用时间(day) -1:不限时
+	optional double price = 7;//Sticker价格
+	optional uint32 stickerCount = 8;//Sticker表情个数
+	optional bool online = 9;//是否上线 true:已上线 false:未上线(在Sticker List不显示)
+	optional int32 priority = 10;//优先级(用来排序) 数字越大优先级越高
+	optional uint32 inviteTimes = 11;//被邀请次数
+	optional bool downloadPrivilege = 12;//是否拥有下载权限 true:是 false:否
+}
+
+message StickerCustomizePB {
+	optional uint64 uid = 1;//User ID
+	optional uint64 sid = 2;//Sticker ID
+	optional uint64 time = 3;//更新时间
+	optional int32 deleted = 4;//是否删除 1:是 0:否
+	optional int32 indexNO =5;//排序序号 数字大排在前面
+}
+
+message SyncStickerListRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid = 2;//User ID
+	required uint64 clientStickerSyncTimestamp = 3;//客户端保存的Sticker List同步时间戳
+	required uint64 clientCustomizeSyncTimestamp = 4;//客户端保存的Customize Sticker List同步时间戳
+}
+
+message SyncStickerListResponse {
+	required int32 ret = 1;
+	optional uint64 serverStickerSyncTimestamp = 2;//服务端Sticker List最新更新时间戳
+	optional uint64 serverCustomizeSyncTimestamp = 3;//服务端Customize Sticker List最新更新时间戳
+	repeated StickerPB stickerList = 4;//Sticker Center列表
+	repeated StickerCustomizePB stickerCustomizeList = 5;//Customize Sticker列表
+}
+
+message GetStickerListRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid = 2;//User ID
+	required uint64 clientStickerSyncTimestamp = 3;//客户端保存的Sticker List同步时间戳
+}
+
+message GetStickerListResponse {
+	required int32 ret = 1;
+	optional uint64 serverStickerSyncTimestamp = 2;//服务端Sticker List最新更新时间戳
+	repeated StickerPB stickerList = 3;//Sticker Center列表
+}
+
+message GetStickerDetailRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid = 2;//User ID
+	required uint64 sid = 3;//Sticker ID
+}
+
+message GetStickerDetailResponse {
+	required uint32 ret = 1;
+	optional StickerPB stickerDetail = 2;
+}
+
+message UploadStickerCustomizeRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid = 2;//User ID
+	repeated StickerCustomizePB stickerCustomize = 3;
+}
+
+message UploadStickerCustomizeResponse {
+	required uint32 ret = 1;
+	required bool uploadSuccess = 2;
+}
+
+//appid:stickerproxy
+service StickerService {
+	rpc syncStickerList(SyncStickerListRequest) returns(SyncStickerListResponse);//同步Sticker列表
+	rpc getStickerList(GetStickerListRequest) returns(GetStickerListResponse);//获取Sticker列表
+	rpc getStickerDetail(GetStickerDetailRequest) returns(GetStickerDetailResponse);//获取Sticker详情
+	rpc uploadStickerCustomize(UploadStickerCustomizeRequest) returns(UploadStickerCustomizeResponse);//用户上传Sticker设置
+}

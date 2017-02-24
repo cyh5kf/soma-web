@@ -1,0 +1,431 @@
+package app;
+
+option java_package="com.messenger.javaserver.snsapp.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+
+import "app/mobrequestbase.proto";
+import "app/account_app.proto";
+//import "imchatmsg.proto";
+//import "cocosns_dbpb.proto";
+
+//朋友圈没有push功能，变化时通知客户端来同步，客户端延迟2秒来同步数据
+//ios版本后台切换到前台时去同步一下(需要好友数据同步完为前提)
+
+enum EActionType
+{
+    EActionType_Add=0;
+    EActionType_Remove=1;
+}
+
+message SnsTopicEvtPB
+{
+    required uint64 evtid=1;//事件ID,应答用
+    required uint64 topicid=2;//话题ID,全局唯一
+    required int32  actiontype=3;
+    optional SnsTopicPB topicdata=4;
+}
+message SnsCommentEvtPB
+{
+    required uint64 evtid=1;//事件ID,应答用
+    required uint64 commentid=2;//全局唯一
+    required int32  actiontype=3;
+    required uint64 topicid=4;//话题ID
+    optional SnsTopicCommentPB commentdata=5;
+    required bool selfRelated=6;//和自己是否相关
+}
+//话题数据变化通知,包含评论数据
+//method: SnsTopicEvtNtf
+message SnsTopicEvntNtf
+{
+    required uint64 touid=1;
+    //repeated SnsEvtPB data=2;//以20个为批量方式返回
+    optional SnsTopicEvtPB newtopic=2;//最新未同步过的topic,在外面红点用，不为空时，进入朋友圈若在顶部需要自动去同步Refresh
+    repeated SnsCommentEvtPB commentmsg=3;//最新未同步的评论消息，
+    repeated SnsTopicEvtPB  removedtopics=4;
+}
+
+
+//客户端本地要对评论消息去重
+message AckSnsEvtRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    repeated uint64 evtids=3;
+};
+message AckSnsEvtResponse
+{
+    required int32 ret=1;
+}
+
+message SyncSnsDataRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+}
+message SyncSnsDataResponse
+{
+    required int32 ret=1;
+}
+
+message PostTopicRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 clientuuid=3;//去重用
+    required int32  datatype=4;	//评论内容类型，see EChatSubItemType
+    optional bytes  content=5;//评论内容
+    optional int32  shareto=6;//分享目标，0:all, 1:private, 2:share to list, 3:don't share list
+    repeated uint64 touids=7;//对应shareto的2和3两种类型
+}
+message PostTopicResponse
+{
+    required int32 ret=1;
+    optional uint64 topicid=2;
+}
+message DelTopicRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 topicid=3;
+}
+message DelTopicResponse
+{
+    required int32 ret=1;
+}
+message LikeTopicRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 topicid=3;
+    required uint64 clientuuid=4;//去重用
+}
+message LikeTopicResponse
+{
+    required int32 ret=1;
+    optional uint64 commentid=2;
+}
+message PostTopicCommentRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 topicid=3;
+    required int32  datatype=4;	//评论内容类型，see EChatSubItemType
+    optional bytes  content=5;//评论内容
+    optional uint64 replytouid=6;
+    required uint64 clientuuid=7;//去重用
+}
+message PostTopicCommentResponse
+{
+    required int32 ret=1;
+    optional uint64 commentid=2;
+}
+message DelTopicCommentRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 topicid=3;
+    required uint64 commentid=4;
+}
+message DelTopicCommentResponse
+{
+    required int32 ret=1;
+}
+message GetTopicDetailRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 topicid=3;
+}
+message GetTopicDetailResponse
+{
+    required int32 ret=1;
+    optional SnsTopicPB topic=2;
+    repeated SnsTopicCommentPB comments=3;
+}
+
+message GetNextPageSnsDataRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 lastpagemaxtopicid=3;
+    //	optional uint64 targetuid=4;//查看谁，默认是自己
+}
+message GetNextPageSnsDataResponse
+{
+    required int32 ret=1;
+    optional bool  hasmore=2;//true==还有更多
+    repeated SnsTopicPB topics=3;
+    repeated SnsTopicCommentPB comments=4;
+}
+message SnsTopicIdDataPB
+{
+    required uint64 topicid=1;
+    repeated uint64 commentid=2;
+}
+message RefreshSnsDataRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    repeated SnsTopicIdDataPB iddata=3;//最新的20条topicids
+    required bool ismanual=4[default=true];//是否是手动刷新，如果是手动刷新，客户端要传commenid，否则，只用传topicid
+}
+//服务器返回全量数据(topics为全新的topic)
+message RefreshSnsDataResponse
+{
+    required int32 ret=1;
+    optional bool isconsistent=2;//是否一致，若不一致，则为返回增量数据,客户端需要清除本地标志，把返回的增量数据和发送的数据topic中最老的topicid设置为lastmaxtopicid
+    repeated SnsTopicPB topics=3;
+    repeated SnsTopicCommentPB comments=4;
+    repeated uint64 deltopics=5;//客户端需要删除的topicid，不用
+    optional uint32 refreshPageSize=6;//刷新最大topic数目，客户端应当每次更新本配置，在下次发送RefreshSnsDataRequest时候，取refreshPageSize条topic
+}
+
+enum ESnsDatatype
+{
+    ESnsDatatype_Topic=0;
+    ESnsDatatype_TopicComment=1;
+}
+
+message SnsImageItemPB
+{
+    optional uint64 filesize=1;
+    optional string imgprevurl=2;//if is image, is preview img url
+    optional string imgurl=3;//if empty, data is the content
+    optional uint32 imgwidth=4;
+    optional uint32 imgheight=5;
+}
+
+message SnsGeoItemPB
+{
+    required double lat=1;//纬度
+    required double lngt=2;//经度
+    optional string poiname=3;//该地点的名字
+    optional string country=4;
+    optional string city=5;
+}
+
+//EChatSubItemType==EChatSubItemType_MutliImage
+message SnsImageTopicPB
+{
+    optional string desc=1;
+    repeated SnsImageItemPB images=2;
+    optional SnsGeoItemPB geo=3;//位置信息
+}
+
+message SnsWebClipItemPB
+{
+    optional string title=1;
+    optional string desc=2;
+    optional string url=3;
+    optional string imgurl=4;
+}
+
+message SnsWebClipTopicPB
+{
+    optional string desc=1;
+    required SnsWebClipItemPB webClip=2;
+    optional SnsGeoItemPB geo=3;//位置信息
+}
+
+
+
+
+//话题数据变化通知数据结构
+message SnsTopicPB
+{
+    required uint64 topicid=1;//话题ID,全局唯一
+    required uint64 senderuid=2;//发送者
+    required int32  actiontype=3;//0==add,1==del
+    optional int32  datatype=4;	//评论内容类型，see EChatSubItemType
+    optional bytes  content=5;//
+    optional int32  shareto=6;//分享目标，0:all, 1:private, 2:share to list, 3:don't share list
+    repeated uint64 touids=7;//对应shareto的2和3两种类型
+    optional uint64 clientid=8;//客户端去重用
+    repeated uint64 not_share_uids=9;
+    optional string senderAvatar = 10;//发送者的头像信息
+}
+//客户端用的评论数据结构
+message SnsTopicCommentPB
+{
+    required uint64 topicid=1;//话题ID,全局唯一
+    required uint64 senderuid=2;//发送者
+    required uint64 commentid=3;//全局唯一
+    required int32  actiontype=4;//0==add,1==del
+    optional int32  commenttype=5;//评论类型，0=＝like,1==评论数据
+
+    //下面部分只有1==commenttype时有效
+    optional uint64 replytouid=6;//回复给谁
+    optional int32  datatype=7;	//评论内容类型，默认为文本
+    optional bytes  content=8;//评论内容
+    repeated uint64  touids=9;//对哪些人可见，客户端暂时不用
+}
+
+
+message ModifyCoverRequest
+{
+    required uint64 uid=2;
+    required string coverurl=3;
+}
+message ModifyCoverResponse
+{
+    required int32 ret=1;
+}
+message GetCoverRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 targetuid=3;
+}
+message GetCoverResponse
+{
+    required int32 ret=1;
+    optional string coverurl=2;
+    optional int32 posttopiccount = 3;
+}
+message GetUserRecentSnsRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 lastpagextopicid=3;
+    required uint64 targetuid=4;//需要查看的用户id
+}
+message GetUserRecentSnsResponse
+{
+    required int32 ret=1;
+    optional bool  hasmore=2;//true==还有更多
+    repeated SnsTopicPB topics=3;
+    repeated SnsTopicCommentPB comments=4;
+    required bool isstranger=5[default = false];//是否是陌生人，如果查看陌生人，根据用户权限设置，一般返回最多10张图片
+    optional uint32 strangerlimit=6;//陌生人最多显示图片数目
+}
+message GetUserSnsProfileImgRequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 targetuid=3;//需要获取的uid
+}
+message GetUserSnsProfileImgResponse
+{
+    required int32 ret=1;
+    repeated string urls = 2;
+    optional bool hasPostTopic = 3;
+}
+
+message GetUserSnsProfileRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 targetuid=3;//需要获取的uid
+    optional int32 imagenum=4;//图片的数目，默认返回3个
+}
+
+message GetUserSnsProfileResponse{
+    required int32 ret=1;
+    repeated string urls = 2;//最近三张图片
+    optional bool  hasmore=3;//true==还有更多
+    repeated SnsTopicPB topics=4;
+    repeated SnsTopicCommentPB comments=5;
+    required bool isstranger=6[default = false];//是否是陌生人，如果查看陌生人，根据用户权限设置，一般返回最多10张图片
+    optional uint32 strangerlimit=7;//陌生人最多显示topic
+    optional string coverurl=8;//cover url
+    optional bool hasPostTopic = 9;
+    optional app.BabaAccountPB profile = 10;
+}
+
+
+
+
+
+
+// appid=snsproxy
+service SnsApp
+{
+    //增量同步朋友圈数据，服务器发送通知给客户端
+    rpc syncSnsData(SyncSnsDataRequest) returns (SyncSnsDataResponse);
+    //客户端应答评论消息收到
+    rpc ackSnsEvt(AckSnsEvtRequest) returns (AckSnsEvtResponse);
+    //客户端发布Topic
+    rpc postTopic(PostTopicRequest) returns (PostTopicResponse);
+    //客户端删除Topic
+    rpc delTopic(DelTopicRequest) returns (DelTopicResponse);
+    //客户端Like某个Topic
+    rpc likeTopic(LikeTopicRequest) returns (LikeTopicResponse);
+    //客户端对某个Topic发送评论
+    rpc postTopicComment(PostTopicCommentRequest) returns (PostTopicCommentResponse);
+    //客户端删除某个评论
+    rpc delTopicComment(DelTopicCommentRequest) returns (DelTopicCommentResponse);
+    //查看某个Topic的详细数据，包含评论
+    rpc getTopicDetail(GetTopicDetailRequest) returns (GetTopicDetailResponse);
+
+
+    //查看自己的Timeline,翻下一页timeline数据
+    rpc getUserNextPageSnsData(GetNextPageSnsDataRequest) returns (GetNextPageSnsDataResponse);
+    //有红点时进入朋友圈自动调用，手工下拉刷新时调用ismaual=true
+    rpc refreshSnsData(RefreshSnsDataRequest) returns(RefreshSnsDataResponse);
+    //查看某个人的topic list
+    rpc getUserRecentSnsData(GetUserRecentSnsRequest) returns(GetUserRecentSnsResponse);
+
+    rpc modifyUserCover(ModifyCoverRequest) returns(ModifyCoverResponse);
+    rpc getUserCover(GetCoverRequest) returns(GetCoverResponse);
+    //返回最新的3个图片数据
+    rpc getUserSnsProfileImg(GetUserSnsProfileImgRequest) returns(GetUserSnsProfileImgResponse);
+
+    //1.返回最新的3个图片数据 2.返回
+    rpc getUserSnsProfile(GetUserSnsProfileRequest)returns(GetUserSnsProfileResponse);
+}
+
+
+
+//服务器内部数据结构用
+
+
+//客户端操作日志表数据格式
+message SnsUserOperationRedoLogPB
+{
+    required uint64 logid=1;//全局唯一
+    required int32 datatype=2;//数据类型,see ESnsDatatype
+    required bytes data=3;
+}
+
+//topic id mapping 表
+//一个topic一行数据，因为topic数据是充分优化过的，size比较小，对读进行优化
+//这样保证同一个topic的数据在同一个分区
+message SnsTopicDBPB
+{
+    required SnsTopicPB topic=1;
+    repeated SnsTopicCommentPB comments=2;
+}
+
+//消息表，最多50个topic数据，只存放最新的300条评论数据，最多7天，超过7天的自动删除;key=uid
+//用于同步消息用
+message SnsMessageDBPB
+{
+    optional uint64 uid=1;
+    //repeated SnsEvtPB data=2;
+    //optional bool  clearlocal=3;
+    //是否有过期的数据，若有，则设置为true，客户端来同步的时候返回全量数据
+    //当事件数据里有topic相关数据>=50时，设置为true,
+
+    repeated SnsTopicEvtPB topicevts=4;
+    repeated SnsCommentEvtPB commentevts=5;
+    repeated SnsTopicEvtPB deletetopicevts = 6;
+}
+
+message SnsUserProfileDBPB{
+    required uint64 uid = 1;
+    optional string coverurl = 2;
+    optional uint32 topicCount = 3;
+    optional uint32 commentCount = 4;
+    repeated string recentTopicImageUrls = 5;//最近三张topic image url
+}
+
+//timeline表的数据，key=uid:topicid,按照uid%1024 进行分区，分成8个区
+//usertimeline表的val数据,不需要了，因为comment数据已经在topic里面了
+//message SnsTimelineValueDBPB
+//{
+//	repeated uint64 commentid=1;
+//}
+
+//userposthistorytopic表数据
+//key=uid:topicid

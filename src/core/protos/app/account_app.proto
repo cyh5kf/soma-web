@@ -1,0 +1,550 @@
+package app;
+//option java_package="app";
+option java_package="com.messenger.javaserver.accountapp.proto";
+//option optimize_for = LITE_RUNTIME;
+import "app/mobrequestbase.proto";
+import "app/user_setting_msg.proto";
+
+
+// 描述好友列表
+message BabaAccountPB {
+    required uint64 uid = 1;//countryCode+mobile
+    optional string name = 2;
+    optional string avatar = 3;
+    optional int32 whatsUpType = 4;//0代表系统签名，1代表自定义签名
+    optional string customWhatsUpContent = 5;//签名类型参照whatsUpType，自定义签名。
+    optional int32 sysWhatsUpNum = 6;//签名类型参照whatsUpType，自定义签名。
+    optional int32 countryCode = 7;//单独国家码
+    optional uint64 mobile = 8;//手机号，不包括国家码
+    optional string regionCodeAlphabet = 9;//字母类型的regionCode
+    optional bool isVip = 10;//是否vip用户
+    optional uint64 vipExpireDate = 11;//vip过期时间，utc时间
+}
+
+
+// 获取好友简单信息列表
+message GetSimpleBabaAccountListRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid = 2;
+	repeated uint64 friendUids = 3; // 获取好友信息的uid列表
+}
+message GetSimpleBabaAccountListResponse
+{
+	required int32 ret = 1;	
+	repeated BabaAccountPB profiles = 2;
+}
+
+// 查询好友详细信息
+message GetBabaAccountPBFriendRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid = 2;
+	required uint64 friendUid = 3;
+}
+message GetBabaAccountPBFriendResponse
+{
+	required int32 ret = 1;
+	optional BabaAccountPB profile = 2;
+}
+
+// log out
+message BabaAccountLogoutRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    optional int32 device_type=3; // 0==ios;1==android;2==bp;3==wp;
+    optional int32 app_type=4; // 0==product;1==enterprise;2==dev;
+}
+message BabaAccountLogoutResponse
+{
+    required int32 ret=1;
+}
+
+// avatar
+message UpdateAvatarRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required string avatarUrl=3; // 头像url 客户端通过http方式上传头像之后的url
+}
+
+message UpdateAvatarResponse
+{
+    required int32 ret=1;
+}
+
+
+// name
+message UpdateNameRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required string name=3; // 昵称
+}
+message UpdateNameResponse
+{
+    required int32 ret=1;
+}
+
+
+
+// status
+message UpdateWhatsUpRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint32 whatsUpType = 3;//签名类型，0代表系统签名，1代表自定义签名
+    optional string customWhatsUpContent=4; // 自定义签名内容
+    optional int32 sysWhatsUpNum=5; // 系统签名编号
+}
+message UpdateWhatsUpResponse
+{
+    required int32 ret=1;
+}
+
+
+// alert
+message UpdateAlertRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool enable_alert=3; // 是否响铃
+}
+message UpdateAlertResponse
+{
+    required int32 ret=1;
+}
+
+// voip visible
+message UpdateVoipVisibleRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required bool onlyFriends=3;
+}
+
+message UpdateVoipVisibleResponse
+{
+    required int32 ret=1;
+}
+
+// vibrate
+message UpdateVibrateRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool enable_vibrate=3; // 是否震动
+}
+message UpdateVibrateResponse
+{
+    required int32 ret=1;
+}
+
+// sound key
+message UpdateSoundKeyRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    optional string sound_key=3; // 铃声名称
+}
+message UpdateSoundKeyResponse
+{
+    required int32 ret=1;
+}
+
+// preview
+message UpdatePreviewRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool preview=3; // 消息是否预览
+}
+message UpdatePreviewResponse
+{
+    required int32 ret=1;
+}
+
+// *device token
+message UpdateDeviceTokenRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required string device_token=3; // 设备token
+    required int32 device_type=4; // 0==ios;1==android;2==bp;3==wp
+    optional int32 app_type=5; // 0==product;1==enterprise;2==dev
+    optional string osversion=6;//操作系统版本号
+    optional int32 tokentype=7;//0==oldtoken,1==voiptoken,2==华为token
+}
+message UpdateDeviceTokenResponse
+{
+    required int32 ret=1;
+}
+
+message UpdateLastSeenPrivacyRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required int32 lastseenPrivacyType=3; //参照 EBabaPrivacyAllowLastSeenType 1 everyone, 2 nobody, 3 contacts
+}
+
+message UpdateLastSeenPrivacyResponse{
+    required int32 ret=1;
+}
+
+message DeleteAccountRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+}
+
+message DeleteAccountResponse{
+    required int32 ret=1;
+}
+
+
+message UpdateBadgeNumRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint32 badgeNum = 3;
+}
+
+message UpdateBadgeNumResponse{
+    required int32 ret=1;
+}
+
+message UpdateHaveReadPrivacyRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool enable=3; //打开，true,否则false，默认打开
+}
+message UpdateHaveReadPrivacyResponse{
+    required int32 ret=1;
+}
+
+message UpdateUserMuteRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 targetUid=3;
+    required bool isMute =4;
+}
+
+message UpdateUserMuteResponse{
+    required int32 ret=1;
+}
+
+message UserRSAPB{
+    required uint64 uid=1;
+    required uint64 version=2;//创建版本时间
+    required uint64 expired=3;//过期时间
+    required bytes pubkeypem=4;//PEM 格式公钥
+}
+
+
+
+message UpdateUserRSARequest
+{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required UserRSAPB userRSAPB = 3;
+}
+message UpdateUserRSAResponse
+{
+    required int32 ret=1;
+}
+
+
+message GetUserRSARequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 touid=3;
+    optional uint64 touidrsaversion=4;//一致的话
+}
+
+message GetUserRSAResponse{
+    required int32 ret=1;//0表示数据库访问成功,ECocoErrorcode_ACCOUNT_APP_DATANOTCHANGED
+    optional UserRSAPB userRSAPB = 2;//ret==0且没有数据表示对方已经删除了
+}
+
+message GetBatchUserRSARequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    repeated uint64 touids=3;
+}
+
+message GetBatchUserRSAResponse{
+    required int32 ret=1;
+    repeated UserRSAPB userRSAPBList = 2;
+}
+
+
+
+message DeleteAccountWithPhoneCheckRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required int32 countryCode = 3;
+    required string phoneNum = 4;
+}
+
+message DeleteAccountWithPhoneCheckResponse{
+    required int32 ret=1;
+}
+
+message UserEccPB{
+    required uint64 uid=1;
+    required uint64 version=2;//创建版本时间
+    required uint64 expired=3;//过期时间
+    required bytes pubkeypem=4;//PEM 格式公钥
+}
+
+message GetUserEccRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 touid=3;
+    optional uint64 touidrsaversion=4;//一致的话
+}
+
+
+
+message GetUserEccResponse{
+    required int32 ret=1;//0表示数据库访问成功,ECocoErrorcode_ACCOUNT_APP_DATANOTCHANGED
+    optional UserEccPB userEccPB = 2;
+}
+
+message UpdateUserEccRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required UserEccPB userEccPB = 3;
+}
+
+message UpdateUserEccResponse{
+    required int32 ret=1;
+}
+
+message GetBatchUserEccRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    repeated uint64 touids=3;
+}
+
+
+message GetBatchUserEccResponse{
+    required int32 ret=1;
+    repeated UserEccPB userEccPBList = 2;
+}
+
+enum EBabaAutoDownloadSettingType{
+    EBabaAutoDownloadSettingType_PHOTO = 0;
+    EBabaAutoDownloadSettingType_VIDEO = 1;
+    EBabaAutoDownloadSettingType_FULL_IMAGE = 2;
+}
+
+enum EBabaAutoDownloadType{
+    EBabaAutoDownloadType_Never = 0;
+    EBabaAutoDownloadType_WIFI = 1;
+    EBabaAutoDownloadType_WIFI_AND_CELLULAR = 2;
+}
+
+message UpdateAutodownloadOptionRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required int32 settingType = 3;//0 phtotos 1 videos 2 Full Images
+    required int32 autoDownloadOption = 4;//0 never 1 Wi-Fi 2 Wi-Fi and Cellular
+}
+
+message UpdateAutodownloadOptionResponse{
+    required int32 ret=1;
+}
+
+message ResetAutodownloadOptionRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+}
+
+message ResetAutodownloadOptionResponse{
+    required int32 ret=1;
+}
+
+message UpdateInAppNtfRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool enable=3; // 是否允许InappNtf
+}
+
+message UpdateInAppNtfResponse{
+    required int32 ret=1;
+}
+
+message UpdateInAppSoundRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool enable=3; // 是否允许InappSound
+}
+
+message UpdateInAppSoundResponse{
+    required int32 ret=1;
+}
+
+message AddGroupToFavoriteRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+}
+
+message AddGroupToFavoriteResponse{
+    required int32 ret=1;
+    optional int32 maxmumGroup =2;
+}
+
+message RemoveGroupFromFavoriteRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+}
+
+message RemoveGroupFromFavoriteResponse{
+    required int32 ret=1;
+}
+
+message UpdateAutoSaveGalleryRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool enable=3; // 是否允许InappSound
+}
+
+message UpdateAutoSaveGalleryResponse{
+    required int32 ret=1;
+}
+
+message GetWebUserSettingsRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+}
+
+message GetWebUserSettingsReponse{
+    required int32 ret = 1 ;
+    optional UserSettings user_settings = 2;
+}
+
+message UpdateWebNotificationRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool enable=3; // 是否允许notification
+}
+
+message UpdateWebNotificationResponse{
+    required int32 ret = 1 ;
+}
+
+message UpdateWebPreviewRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool enable=3; // 是否允许webpreview
+}
+
+message UpdateWebPreviewResponse{
+    required int32 ret = 1 ;
+}
+
+message UpdateWebSoundRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+    required bool enable=3; // 是否允许preview
+}
+
+message UpdateWebSoundResponse{
+    required int32 ret = 1 ;
+}
+
+message GetFavoriteGroupListRequest{
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid=2;
+}
+
+message GetFavoriteGroupListResponse{
+    required int32 ret= 1;
+    repeated FavoriteGroup favoriteGroup = 2;
+}
+
+message FavoriteGroup{
+    required uint64 gid = 1;
+    required string name  = 2;
+    required string avatar = 3;
+    required uint64 created = 4;
+}
+
+
+
+
+
+
+
+// appid=accountproxy
+service BabaAccountAppApi
+{
+    // 根据uid列表返回朋友用户简要信息列表
+	rpc getSimpleBabaAccountList(GetSimpleBabaAccountListRequest) returns (GetSimpleBabaAccountListResponse);
+    // 根据frienduid
+    rpc getBabaAccountPBFriend(GetBabaAccountPBFriendRequest)returns(GetBabaAccountPBFriendResponse);
+    // 用户登出
+	rpc BabaAccountLogout(BabaAccountLogoutRequest) returns (BabaAccountLogoutResponse);
+    // 更新头像 用户传入url
+	rpc updateAvatar(UpdateAvatarRequest) returns (UpdateAvatarResponse);
+    // 更新姓名
+    rpc updateName(UpdateNameRequest) returns (UpdateNameResponse);
+    // 更新签名信息
+    rpc updateWhatsUp(UpdateWhatsUpRequest) returns (UpdateWhatsUpResponse);
+    // 更新是否响铃设置
+    rpc updateAlert(UpdateAlertRequest) returns (UpdateAlertResponse);
+    // 更新是否震动设置
+    rpc updateVibrate(UpdateVibrateRequest) returns (UpdateVibrateResponse);
+    // 更新铃声名称信息
+    rpc updateSoundKey(UpdateSoundKeyRequest) returns (UpdateSoundKeyResponse);
+    // 更新消息预览设置
+    rpc updatePreview(UpdatePreviewRequest) returns (UpdatePreviewResponse);
+
+    rpc updateLastSeenPrivacy(UpdateLastSeenPrivacyRequest) returns (UpdateLastSeenPrivacyResponse);
+    // 更新device token信息
+    rpc updateDeviceToken(UpdateDeviceTokenRequest) returns (UpdateDeviceTokenResponse);
+    // Accept calls from friends only 默认为非选中状态 即everyone
+    rpc updateVoipVisible(UpdateVoipVisibleRequest) returns (UpdateVoipVisibleResponse);
+
+    rpc deleteAccount(DeleteAccountRequest)returns(DeleteAccountResponse);
+
+    rpc updateBadgeNum(UpdateBadgeNumRequest)returns(UpdateBadgeNumResponse);
+
+    rpc updateHaveReadPrivacy(UpdateHaveReadPrivacyRequest)returns(UpdateHaveReadPrivacyResponse);
+
+    rpc updateUserMute(UpdateUserMuteRequest)returns(UpdateUserMuteResponse);
+    //上传RSA公钥
+    rpc updateUserRSA(UpdateUserRSARequest)returns(UpdateUserRSAResponse);
+
+    rpc getUserRSA(GetUserRSARequest)returns(GetUserRSAResponse);
+
+    rpc getBatchUserRSA(GetBatchUserRSARequest)returns(GetBatchUserRSAResponse);
+
+    rpc deleteAccountWithPhoneCheck(DeleteAccountWithPhoneCheckRequest)returns(DeleteAccountWithPhoneCheckResponse);
+
+    rpc getUserEcc(GetUserEccRequest)returns(GetUserEccResponse);
+    rpc updateUserEcc(UpdateUserEccRequest)returns(UpdateUserEccResponse);
+    rpc getBatchUserEcc(GetBatchUserEccRequest)returns(GetBatchUserEccResponse);
+    rpc updateAutodownloadOption(UpdateAutodownloadOptionRequest)returns(UpdateAutodownloadOptionResponse);
+    rpc resetAutodownloadOption(ResetAutodownloadOptionRequest)returns(ResetAutodownloadOptionResponse);
+    rpc updateInAppNtf(UpdateInAppNtfRequest)returns(UpdateInAppNtfResponse);
+    rpc updateInAppSound(UpdateInAppSoundRequest)returns(UpdateInAppSoundResponse);
+    //增加group到Fav
+    rpc addGroupToFavorite(AddGroupToFavoriteRequest)returns(AddGroupToFavoriteResponse);
+    //删除group到Fav
+    rpc removeGroupFromFavorite(RemoveGroupFromFavoriteRequest)returns(RemoveGroupFromFavoriteResponse);
+
+    //自动保存到相册
+    rpc updateAutoSaveGallery(UpdateAutoSaveGalleryRequest)returns(UpdateAutoSaveGalleryResponse);
+
+    //**只能web端使用  begin**/
+    rpc getWebUserSettings(GetWebUserSettingsRequest)returns(GetWebUserSettingsReponse);
+    rpc updateWebNotification(UpdateWebNotificationRequest)returns(UpdateWebNotificationResponse);
+    rpc updateWebPreview(UpdateWebPreviewRequest)returns(UpdateWebPreviewResponse);
+    rpc updateWebSound(UpdateWebSoundRequest)returns(UpdateWebSoundResponse);
+    rpc getFavoriteGroupList(GetFavoriteGroupListRequest)returns(GetFavoriteGroupListResponse);
+    //**只能web端使用  end**/
+
+
+}

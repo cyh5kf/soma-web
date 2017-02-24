@@ -1,0 +1,148 @@
+.comp-PhotoPicker {
+  //width: 80px;
+  //height: 80px;
+  position: relative;
+  user-select:none;
+
+  .fileSelector{
+    display: none;
+  }
+
+  .grayMask{
+    width: 100%;
+    height: 100%;
+    position: absolute;
+    top: 0;
+    left: 0;
+    background: fade(#000000,20);
+    z-index: 5;
+    border-radius: 1000px;
+    display: none;
+    cursor: pointer;
+  }
+
+  .comp-blue-loading{
+    z-index: 20;
+  }
+
+  &:hover{
+    .grayMask{
+      display: block;
+    }
+  }
+
+  .charAvatar{
+    width: 100%;
+    height: 100%;
+    text-align: center;
+    color: #ffffff;
+    font-size: 25px;
+  }
+
+  .imageBox {
+    position: relative;
+    background: #fff;
+    overflow: hidden;
+    background-repeat: no-repeat;
+    cursor: move;
+    border-radius: 1000px;
+  }
+
+
+  .container {
+    position: relative;
+  }
+
+  .action {
+    position: absolute;
+    top: 7px;
+    right: -48px;
+    width: 28px;
+
+    button{
+      width: 16px;
+      height: 16px;
+      border: none;
+      outline: none;
+      margin: 0 auto;
+      display: block;
+      cursor: pointer;
+    }
+
+    .action1,.action2{
+      background: #FFFFFF;
+      box-shadow: 0px 1px 2px 0px rgba(0,0,0,0.10);
+      border-radius: 1px;
+      width: 28px;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .action1{
+      height: 62px;
+    }
+
+    .action2{
+      margin-top: 15px;
+      height: 28px;
+    }
+
+    .ic_add_black{
+      background: url("./images/ic_add_black_16px.png");
+      background-size: cover;
+    }
+
+    .ic_minus_black{
+      background: url("./images/ic_minus_black_16px.png");
+      background-size: cover;
+      margin-top: 15px;
+    }
+
+    .ic_right_blue{
+      background: url("./images/ic_right_blue_16px.png");
+      background-size: cover;
+    }
+
+  }
+
+
+  .cropped > img {
+    margin-right: 10px;
+  }
+
+
+  .imageView{
+    position: relative;
+
+    .imageViewObj{
+      background-color: #CDCDCD;
+      border-radius: 1000px;
+      background-size: cover;
+    }
+
+  }
+
+
+  .accountAvatar {
+    width: 80px;
+    height: 80px;
+    line-height: 80px;
+  }
+
+}
+
+
+.PhotoImageViewPopper {
+
+  &.popper.bottom {
+    margin-top: -37px;
+    margin-left: 19px;
+  }
+
+  .rc-menu-vertical {
+    min-width: 170px;
+  }
+
+}

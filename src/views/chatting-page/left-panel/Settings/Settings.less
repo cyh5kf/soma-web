@@ -1,0 +1,140 @@
+.LeftPanelPlaceHolder .Settings {
+    background-color: #f7f7f7 !important;
+    .loading-content {
+        display: flex;
+        -webkit-display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 100%;
+        height: 100%;
+        .ic-loading{
+            display: block;
+            width:50px;
+            height:50px;
+            background: url("../../../../images/ic_cached_blue_80px.png");
+            background-size: cover;
+            animation:animatorCircle 0.8s infinite linear;/*匀速 循环*/
+        }
+    }
+    .content {
+        overflow-x: hidden;
+        overflow: auto;
+        width: 100%;
+        padding: 0 20px;
+        .edit-avatar-wrap{
+            margin: 20px auto 30px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .edit-title {
+            display: block;
+            font-size: 14px;
+            color: #717171;
+            margin-left: 15px;
+            font-weight: bold;
+        }
+        .notifacations {
+            border-radius: 2px;
+            .edit-title {
+                margin-top: 34px;
+            }
+        }
+        .content-wrap {
+            width: 100%;
+            background-color: #fff;
+            padding: 0 15px;
+            margin-top: 9px;
+            border-radius: 2px;
+            .edit-list {
+                width:100%;
+                height:88px;
+                padding-top: 22px;
+                .list-title {
+                    color: #000;
+                    opacity: 0.38;
+                    text-transform: capitalize;
+                }
+                .list-text {
+                    margin-top: 8px;
+                    position: relative;
+                    .list_name {
+                        color: #000;
+                        opacity: 0.78;
+                    }
+                    .list_input {
+                        width: 100%;
+                        border: none;
+                        border-bottom: 2px solid #4CC5FB;
+                        outline:none;
+                    }
+                    .ic-edit {
+                        width: 24px;
+                        height: 24px;
+                        background: url("images/ic_edit_black_24px.png");
+                        background-size: cover;
+                        position: absolute;
+                        top:-6px;
+                        right:0;
+                        cursor: pointer;
+                    }
+                    &:hover {
+                        .ic-edit {
+                            display:block!important;
+                        }
+                    }
+
+                }
+            }
+            .notifacations-list {
+                width:100%;
+                height:72px;
+                padding-top: 27px;
+                .notifacations_text {
+                    position: relative;
+                    .switch_name {
+                        float:left;
+                    }
+                    .switch_btn {
+                        position:absolute;
+                        top:0;
+                        right:0;
+                        float:right;
+                    }
+                }
+            }
+            .border-line {
+                border-bottom: 1px solid #dedede;
+            }
+        }
+
+        .about, .log-out {
+            width: 100%;
+            height: 48px;
+            line-height: 48px;
+            background-color: #fff;
+            margin: 0 auto;
+            text-align: center;
+            cursor: pointer;
+            border-radius: 2px;
+            &:hover {
+                background-color: #F0F0F0;
+            }
+        }
+        .about {
+            margin-top: 30px;
+            display: block;
+            text-decoration: none;
+            color: inherit;
+            &:active {
+                color: #000;
+            }
+        }
+        .log-out {
+            margin-top: 4px;
+            margin-bottom: 13px;
+        }
+    }
+
+
+}

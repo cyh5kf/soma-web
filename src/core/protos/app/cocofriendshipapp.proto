@@ -1,0 +1,225 @@
+package app;
+option java_package="com.messenger.javaserver.friendship.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+
+import "app/account_app.proto";
+import "app/mobrequestbase.proto";
+
+message ContactPB
+{
+	required uint64 phone=1;  // 客户端已处理为标准的country+nationalnumber，
+	                          // nationalnumber和countrycode之间没有'0'，号码中没有除数字外其他符号，如'8615234567890'
+	optional string name=2;  // 名字
+}
+
+//method:ContactNtf
+//Contact内用户变化通知，matchUser标识通讯录注册为soma的用户信息，deleteUser标识注销了soma用户的手机号
+message ContactNtf
+{
+	repeated BabaAccountPB matchUser=1;  //新增的用户信息
+	optional uint64 deleteUser=2;  //删除的用户
+	optional bool newRegFriend=3[default = false];  //标识这个ContactNtf是否是有新的好友注册进来所产生，
+													//只有在线时，通讯里内有新用户注册进来时，消息的该字段才会被赋值为true
+	optional uint64 pushid=4;//apn push id
+	optional uint64 pushserver=5;//cocopush服务器id
+}
+
+//method:syncContacts，匹配到用户后，会直接推送
+message SyncContactsRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2; //即用户的电话号码去除'+'
+	optional uint32 countrycode=3; //设备所使用的国家码，如果设备没有sim卡或者无法正确读取，不传递
+	repeated ContactPB contacts=4; //新增、更新的号码列表
+	repeated uint64 removedcontacts=5; // 删除的号码列表，当increment=false时，忽略该值
+	required bool increment=6 [default=false]; // 当该标记为false时，首先需要清楚之前的contact数据，
+	                                           // 当变更了手机，及手机号码国家码，需设置increment=false，进行重新匹配
+}
+message SyncContactsResponse {  // 将以推送方式返回ContactNtf
+	required int32 ret=1;
+}
+
+message ContactUnformatedPB
+{
+	required string phone=1;  // 客户端未处理号码
+	optional string name=2;   // 名字
+	optional bool newAddContact=3; // 当标记为false时，表示是激活的手机上原有的号码
+	                               // 当标记为true，表示是用户操作的新增号码
+}
+
+//method:syncContactsNew，只负责通讯录删减
+message SyncContactsNewRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2; //即用户的电话号码去除'+'
+	repeated ContactUnformatedPB contacts=3; //新增、更新的号码列表
+	repeated string removedcontacts=4; // 删除的号码列表，当increment=false时，忽略该值
+	required bool increment=5 [default=false]; // 当该标记为false时，首先需要清楚之前的contact数据，
+	                                           // 当变更了手机，及手机号码国家码，需设置increment=false，进行重新匹配
+}
+message SyncContactsNewResponse {
+	required int32 ret=1;
+}
+
+//method:syncAllContacts，在升级时负责全量通讯录上传(服务端会只写非加密通讯录表)
+// 客户端在升级新版本后做全量上传时调用一次该接口，该接口其他时候不会被使用，其他之前的通讯录操作。
+// ContactUnformatedPB.newAddContact 不用赋值
+message SyncAllContactsRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2; //即用户的电话号码去除'+'
+	repeated ContactUnformatedPB contacts=3; //新增、更新的号码列表
+}
+message SyncAllContactsResponse {
+	required int32 ret=1;
+}
+
+//method:getFriendList, 获取好友列表，所谓好友列表，就是通讯录内的号码中为soma用户的。
+// 只会被用户web im端
+message GetFriendListRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+}
+message GetFriendListResponse {
+	required int32 ret=1;
+	repeated BabaAccountPB friends=2;
+}
+
+message MatchUserPB {
+	required string phone=1;
+	optional string contactName=2;
+	optional BabaAccountPB user=3;
+	optional uint64 formatPhone=4; //只有当该值存在时，countryCode、region才会有值
+	optional uint32 countryCode=5; //当formatPhone有值
+	optional string region=6; //当formatPhone有值
+}
+
+message MatchUserListPB {
+	repeated MatchUserPB users=1;
+}
+
+//传递上来的号码必须不为空，名字为空的使用空字符串""
+message GetMatchUserParam
+{
+	repeated ContactUnformatedPB phones=1;
+}
+
+//method:getMatchUsers
+//根据号码列表${phones}获取能匹配到的用户
+message GetMatchUsersRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required bytes data=3; //compressed of GetMatchUserParam
+}
+message GetMatchUsersResponse {
+	required int32 ret=1;
+	optional bytes data=2; //compressed of MatchUserListPB
+}
+
+//method:blockContact，将一个电话号码拉黑
+message BlockContactRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required uint64 friend=3;
+}
+message BlockContactResponse {
+	required int32 ret=1;
+}
+
+//method:unblockContact，将一个电话号码拖出黑名单
+message UnblockContactRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required uint64 friend=3;
+}
+message UnblockContactResponse {
+	required int32 ret=1;
+}
+
+//method:getBlockList，获取黑名单
+message GetBlockListRequest {
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+}
+message GetBlockListResponse {
+	required int32 ret=1;
+	repeated uint64 phones=2;
+}
+
+// method: inviteContactFriends
+// 邀请电话号码通讯录中好友
+message InviteContactFriendsRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	repeated uint64 phone=3;
+}
+message InviteContactFriendsResponse
+{
+	required int32 ret=1;  //如果由客户端发送，则返回码为ECocoErrorcode.ECocoErrorcode_FRIENDSHIP_INVITEBYCLIENT_VALUE
+	optional uint32 invitedcount=2;
+}
+
+// method: uploadphonecalllog
+// 接听和拨打均调用该接口
+message UploadPhoneCallLogRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required string phone=3;
+}
+message UploadPhoneCallLogResponse
+{
+	required int32 ret=1;
+	optional uint64 phonenumber=2;
+}
+
+// 返回通话记录对象
+message CallLogPB
+{
+	required uint64 phone=1;
+	required uint32 count=2;
+}
+
+// method: getrecentphonecalllogs
+// 返回通话记录，通话次数最多的号码列表及其次数。考虑到可能更换设备之类，客户端需要对这些号码做滤除处理
+message GetRecentPhoneCallLogsRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+}
+message GetRecentPhoneCallLogsResponse
+{
+	required int32 ret=1;
+	repeated CallLogPB logs=2;
+}
+
+//appid=friendsproxy
+service FriendshipApp
+{
+	//同步通讯录接口
+	rpc syncContacts(SyncContactsRequest)returns(SyncContactsResponse);
+	//同步通讯录接口，只负责通讯录增删
+	rpc syncContactsNew(SyncContactsNewRequest)returns(SyncContactsNewResponse);
+	//在升级时负责全量通讯录上传(服务端会只写非加密通讯录表)
+	rpc syncAllContacts(SyncAllContactsRequest)returns(SyncAllContactsResponse);
+	//获取号码匹配的用户列表
+	rpc getMatchUsers(GetMatchUsersRequest)returns(GetMatchUsersResponse);
+	//拉黑
+	rpc blockContact(BlockContactRequest)returns(BlockContactResponse);
+	//从黑名单中拖出
+	rpc unblockContact(UnblockContactRequest)returns(UnblockContactResponse);
+	//获取黑名单
+	rpc getBlockList(GetBlockListRequest)returns(GetBlockListResponse);
+	//发送邀请短信
+	rpc inviteContactFriends(InviteContactFriendsRequest)returns(InviteContactFriendsResponse);
+	//上传通话记录
+	rpc uploadphonecalllog(UploadPhoneCallLogRequest)returns(UploadPhoneCallLogResponse);
+	//获取通过记录
+	rpc getrecentphonecalllogs(GetRecentPhoneCallLogsRequest)returns(GetRecentPhoneCallLogsResponse);
+	//获取好友列表
+	rpc getFriendList(GetFriendListRequest)returns(GetFriendListResponse);
+}
+
+//real client rpc call method=
+//friendsproxy.synFriendList

@@ -1,0 +1,152 @@
+@import "../../components/common";
+
+.LoginPage {
+  height: 100%;
+  position: relative;
+
+  .bg {
+    height: 100%;
+    background-color: #F8F8F8;
+    .header {
+      height: 222px;
+      background: #0099CC;
+
+      .logo{
+        padding-left: 35px;
+        padding-top: 35px;
+      }
+
+      .icon-soma{
+        width: 24px;//48
+        height: 23px; //46
+        float: left;
+        background: url("./images/ic_soma_white_24px.png");
+        background-size: cover;
+      }
+
+      .title{
+        font-size: 16px;
+        color: #FFFFFF;
+        float: left;
+        margin-left: 5px;
+        line-height: 26px;
+      }
+
+    }
+  }
+
+  .content{
+    width: 420px;
+    height: 472px;
+    border-radius: 4px;
+    background-color: #ffffff;
+    position: absolute;
+    left: 50%;
+    margin-left: -210px;
+    margin-top: -236px;
+    top: 50%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: #000000;
+
+    .qrcode-wrapper{
+      margin-top: 72px;
+    }
+
+    .qrcode-refresh{
+      width: 240px;
+      height: 240px;
+      position: absolute;
+      top: 0px;
+      left: 0px;
+      background-color: fade(#FFFFFF,95);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      cursor: pointer;
+
+
+      .ball{
+        width: 193px;
+        height: 193px;
+        background-color: #5DC8EB;
+        border-radius: 200px;
+        .refresh-icon{
+          margin: 62px auto auto auto;
+          width: 45px;
+          height: 45px;
+          background: url("./images/ic_cached_white_48px.png");
+          background-size: cover;
+        }
+
+        .refresh-text{
+          text-align: center;
+          color: #FFFFFF;
+          font-size: 14px;
+          margin-top: 16px;
+        }
+      }
+    }
+
+
+    .qrcode-display{
+      width: 240px;
+      height: 240px;
+      position: relative;
+
+      //&:hover{
+      //  .qrcode-refresh{
+      //    display: flex;
+      //  }
+      //}
+
+    }
+
+    .qrcode-loading{
+      width: 240px;
+      height: 240px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .qrcode-loading-img{
+      width: 80px;
+      height: 80px;
+      background: url("../../images/ic_cached_blue_80px.png");
+      background-size: cover;
+      animation:animatorCircle 0.8s infinite linear;/*匀速 循环*/
+    }
+
+
+
+    .tips1{
+      font-size: 20px;
+      line-height: 23px;
+      margin-top: 48px;
+    }
+
+    .tips2{
+      font-size: 14px;
+      line-height: 24px;
+      margin-top: 7px;
+      opacity: 0.54;
+    }
+
+    .compatibility-notes {
+      position: absolute;
+      bottom: -60px;
+      left:0;
+      right:0;
+      text-align: center;
+      font-size: 14px;
+      color: #FF7043;
+      line-height: 24px;
+      padding: 0 27px;
+    }
+
+
+  }
+
+}

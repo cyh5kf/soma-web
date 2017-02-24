@@ -1,0 +1,54 @@
+@import "../../components/common";
+
+.comp-ViewInput {
+
+  margin-top: 8px;
+  position: relative;
+  border-bottom: 2px solid transparent;
+
+  &.isEditing{
+    border-bottom-color: #4CC5FB;
+  }
+
+  .list_input,.list_name {
+    width: 100%;
+    border: none;
+    outline: none;
+    height: 20px;
+    display: block;
+    margin: 0;
+    line-height: 20px;
+    vertical-align: middle;
+    white-space:nowrap;
+    overflow:hidden;
+    text-overflow:ellipsis;
+    text-align: left;
+    padding-right: 40px;
+  }
+
+  .ic-edit, .ic-loading {
+    width: 24px;
+    height: 24px;
+    background: url("../../images/ic_edit_black_24px.png");
+    background-size: cover;
+    position: absolute;
+    top: -6px;
+    right: 0;
+    cursor: pointer;
+    display: none;
+  }
+
+  &:hover {
+    .ic-edit {
+      display: block !important;
+    }
+  }
+
+  .ic-loading {
+    display: block;
+    background: url("../../images/ic_cached_blue_80px.png");
+    background-size: cover;
+    animation: animatorCircle 0.8s infinite linear; /*匀速 循环*/
+  }
+
+}

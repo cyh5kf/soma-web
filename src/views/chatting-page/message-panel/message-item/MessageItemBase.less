@@ -1,0 +1,94 @@
+@import "../../../../components/_variables";
+@import "../../../../components/_mixins";
+
+.message-item {
+  @min-item-height: 32px;
+  position: relative;
+  z-index: 0;
+
+  .icon-msg-menu {
+    position: absolute;
+    top: 6px;
+    right: 10px;
+    width: 48px;
+    height: 20px;
+    .icon-content {
+      .enlarge-icon-clickable-area();
+      transition-property: transform;
+      transition-duration: 50ms;
+      transform: translateX(0px);
+      display: block;
+      float: right;
+      margin-top: 6px;
+      margin-right: 2px;
+      width: 10px;
+      height: 6px;
+      cursor: pointer;
+      background: url(images/ic_next_pressed_6px.png) center/contain no-repeat;
+    }
+  }
+  &:not(:hover) .icon-msg-menu {
+    visibility: hidden;
+    .icon-content {
+      transform: translateX(10px);
+    }
+  }
+
+  .message-item-content {
+    min-height: @min-item-height;
+    box-shadow: @color-shadow-msg-content 0 0.5px 1px;
+    background-color: @color-white;
+    border-radius: 5px;
+  }
+
+  .msg-time-status {
+    white-space: nowrap;
+    line-height: 16px;
+    font-size: 12px;
+    position: absolute;
+    right: 11px;
+    bottom: 4px;
+    color: @color-light-text-hint;
+  }
+  &.own-msg.p2p-msg {
+    .msg-time-status,
+    .msg-time-status-placeholder {
+      padding-right: 19px;
+      background-position: right center;
+      background-repeat: no-repeat;
+      background-size: 16px 16px;
+    }
+    &.failed .msg-time-status,
+    &.sending .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_clock_black_16px.png);
+    }
+    &.sent .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_check_black_16px.png);
+    }
+    &.received .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_dblcheck_black_16px.png);
+    }
+    &.read .msg-time-status {
+      background-image: url(../../../view-components/images/msg-status-images/ic_dblcheck_blue_16px.png);
+    }
+  }
+  &.own-msg.group-msg {
+    &.failed .msg-time-status:not(.ts-placeholder),
+    &.sending .msg-time-status:not(.ts-placeholder) {
+      background: url(../../../view-components/images/msg-status-images/ic_clock_black_16px.png) center/contain no-repeat;
+      font-size: 0;
+      width: 16px;
+      height: 16px;
+    }
+  }
+
+  .msg-failure-icon {
+    .center-align(false, true);
+    cursor: pointer;
+    right: 100%;
+    width: 24px;
+    height: 24px;
+    margin-right: 12px;
+    background: url(images/ic_error_red_24px.png) center/contain no-repeat;
+  }
+}

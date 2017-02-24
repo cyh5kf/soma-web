@@ -1,0 +1,138 @@
+package app;
+option java_package="com.messenger.javaserver.offudbsub.proto";
+
+import "app/mobrequestbase.proto";
+
+// 关注公众号
+message SubscribeRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required uint64 oid = 3;
+}
+message SubscribeResponse {
+    required int32 ret = 1;
+    optional string msg = 2;
+}
+// 批量关注公众号
+message SubscribeBatchRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    repeated uint64 oid = 3;
+}
+message SubscribeBatchResponse {
+    required int32 ret = 1;
+    optional string msg = 2;
+}
+// 取消关注公众号
+message UnsubscribeRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required uint64 oid = 3;
+}
+message UnsubscribeResponse {
+    required int32 ret = 1;
+    optional string msg = 2;
+}
+
+// 遍历一个用户关注的所有公众号信息
+message ListSubOfficialRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+}
+message OfficialProfilePB {
+    required uint64 oid = 1;
+    // 公众号消息的链接是否安全
+    optional int32 type = 2;
+    optional string name = 3;
+    optional string avatar = 4;
+    optional string description = 5; 
+    // 是否已经关注这个公众号
+    optional bool subscribed = 6;
+    // 是否接收这个公众号的推送消息
+    optional bool receive_message = 7;
+    // 公众号的类型，如媒体，企业
+    optional int32 official_type = 8;
+    optional string history_message_url = 9;
+    optional bool disable_chatting = 10;
+}
+message ListSubOfficialResponse {
+    required int32 ret = 1;
+    repeated OfficialProfilePB profiles = 2;
+}
+
+// 获取公众号信息
+message AcquireOfficialProfileRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required uint64 oid = 3;
+}
+message AcquireOfficialProfileResponse {
+    required int32 ret = 1;
+    optional OfficialProfilePB profile = 2;
+    optional string msg = 3;
+}
+
+// 设置是否接收公众号的消息
+message AlterReceiveOfficialMessageRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required uint64 oid = 3;
+    required bool receive_message = 4;
+}
+message AlterReceiveOfficialMessageResponse {
+    required int32 ret = 1;
+    optional string msg = 2;
+}
+
+// 搜索公众号
+message SearchOfficialRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    // 搜索关键字
+    required string query = 3;
+    //第几页，从0开始
+    optional int32 page = 4;
+}
+message SearchOfficialResponse {
+    required int32 ret = 1;
+    repeated OfficialProfilePB profiles = 2;
+    // 是否最后一页
+    optional int32 lastpage = 3;
+}
+
+// 获得推荐公众号列表. 
+// 推荐的数量有限，不需要考虑分页.
+message ListRecommendedOfficialRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+}
+message ListRecommendedOfficialResponse {
+    required int32 ret = 1;
+    repeated OfficialProfilePB profiles = 2;
+}
+
+// 推送给客户端的公众号列表
+message RecommendedOfficialPB {
+    repeated OfficialProfilePB profiles = 1;
+}
+
+service OffUdbSubService {
+    // 关注公众号
+    rpc Subscribe(SubscribeRequest) returns (SubscribeResponse);
+    rpc SubscribeBatch(SubscribeBatchRequest) returns (SubscribeBatchResponse);
+    // 取消关注公众号
+    rpc Unsubscribe(UnsubscribeRequest) returns (UnsubscribeResponse);
+    // 修改是否接收公众号消息
+    rpc AlterReceiveOfficialMessage(AlterReceiveOfficialMessageRequest) 
+            returns (AlterReceiveOfficialMessageResponse);
+    // 查询已经关注的公众号信息
+    rpc ListSubOfficial(ListSubOfficialRequest) returns (ListSubOfficialResponse);
+    // 查询一个公众号的信息
+    rpc AcquireOfficialProfile(AcquireOfficialProfileRequest) 
+            returns (AcquireOfficialProfileResponse);
+    // 搜索公众号
+    rpc SearchOfficial(SearchOfficialRequest) returns (SearchOfficialResponse);
+    // 获得推荐的公众号
+    rpc ListRecommendedOfficial(ListRecommendedOfficialRequest) 
+            returns (ListRecommendedOfficialResponse);
+}

@@ -1,0 +1,38 @@
+@import "../../../../components/_mixins";
+@import "../../../../components/_variables";
+
+.message-item.location-msg {
+  .message-item-content {
+    overflow: hidden;
+    width: 330px;
+    padding: 3px 11px 3px 3px;
+    cursor: pointer;
+    .location-thumbnail {
+      display: block;
+      float: left;
+      width: 100px;
+      height: 100px;
+      border-radius: 3px;
+    }
+
+    .location-desc {
+      overflow: hidden;
+      padding: 8px 0 0 11px;
+      line-height: 18px;
+
+      .location-desc-title {
+        font-size: 16px;
+        color: @color-light-text-primary;
+        padding-bottom: 5px;
+        text-overflow: ellipsis;
+        overflow: hidden;
+        white-space: nowrap;
+      }
+
+      .location-desc-subtitle {
+        font-size: 14px;
+        color: @color-light-text-hint;
+      }
+    }
+  }
+}

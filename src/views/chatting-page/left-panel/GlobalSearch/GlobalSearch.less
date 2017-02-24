@@ -1,0 +1,72 @@
+@import "../../../../components/_variables";
+
+.GlobalSearch {
+  background-color: @color-bg-light;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  overflow-y: auto;
+  .empty-tips{
+    align-items: center;
+    justify-content: center;
+    flex-direction: column;
+    display: flex;
+    margin-top: 160px;
+  }
+
+  .empty-icon{
+    background: url("./images/ic_no_results.png");
+    background-size: cover;
+    width: 240px;
+    height: 162px;
+  }
+
+  .empty-text{
+    margin-top: 20px;
+    text-align: center;
+    height: 19px;
+    line-height: 19px;
+    color: fade(#000000,54);
+    font-size: 16px;
+  }
+  .SearchList {
+    .searchType {
+      width: 100%;
+      height: 50px;
+      color: #999;
+      font-size: 14px;
+      position: relative;
+      span {
+        position: absolute;
+        top: 25px;
+        left: 15px;
+        font-weight: normal;
+      }
+    }
+  }
+
+  .clickMore {
+    width: 100%;
+    height: 74px;
+    line-height: 74px;
+    background-color: @color-white;
+    color: @color-blue-dark;
+    cursor: pointer;
+    position: relative;
+    span {
+      margin-left: 73px;
+      font-weight: normal;
+    }
+    i {
+      background: url("./images/ic_search_blue_18px.png");
+      background-size: cover;
+      width: 18px;
+      height: 18px;
+      position: absolute;
+      top: 28px;
+      left: 30px;
+    }
+  }
+
+}

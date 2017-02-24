@@ -1,0 +1,681 @@
+package app;
+
+option java_package="com.messenger.javaserver.imgroupserver.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+import "app/imgroupmsg.proto";
+import "app/mobrequestbase.proto";
+//import "service/offmsgservice.proto";
+
+//创建普通群, friends中不包含uid, 用户创建群之后服务器通知所有friend
+//method: createGroup
+message CreateGroupRequest
+{
+	optional app.MobRequestBase baseinfo=1;
+	required uint64 uid=2;
+	repeated uint64 friend=3;
+	optional string name=4;
+	optional string avatar=5;
+	//optional int32 type=6;//群类型，0(null):chat，1:voip
+}
+message CreateGroupResponse
+{
+	required int32 ret=1;
+	optional app.GroupFullInfoPB groupFullInfo=2;//群信息 + 群成员列表
+	repeated uint64 blockUid=3;//如果用户block返回block的用户
+    //optional string roomid=4;
+
+}
+
+//获取群全量信息 (客户端发现没有群信息 需要调用该接口)
+//method: getGroupInfo
+message GetGroupInfoRequest
+{
+	optional app.MobRequestBase baseinfo=1;
+	required uint64 uid=2;
+	required uint64 gid=3;
+}
+message GetGroupInfoResponse
+{
+	required int32 ret=1;
+	optional app.GroupFullInfoPB groupFullInfo=2;
+}
+
+//增加群用户, 用户增加成功之后, 通知所有群用户
+//method: addGroupUser
+message AddGroupUserRequest
+{
+	optional app.MobRequestBase baseinfo=1;
+	required uint64 uid=2;
+	required uint64 gid=3;
+	repeated uint64 friend=4;//好友列表信息, 不包含本人
+}
+message AddGroupUserResponse
+{
+	required int32 ret=1;
+	repeated uint64 blockUid=2;//如果用户block返回block的用户
+}
+
+//标记不接受消息
+//method: markSilent
+message MarkSilentRequest
+{
+	optional app.MobRequestBase baseinfo=1;
+	required uint64 uid=2;
+	required uint64 gid=3;
+	required bool silent=4;
+}
+message MarkSilentResponse
+{
+	required int32 ret=1;
+}
+
+//设置管理员
+//method: setManager
+message SetManagerRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 friend=3;
+    required uint64 gid=4;
+}
+message SetManagerResponse
+{
+    required int32 ret=1;
+}
+
+//获取二维码
+//method: getQRCode
+message GetQRCodeRequest
+{
+	optional app.MobRequestBase baseinfo=1;
+	required uint64 uid=2;
+	required uint64 gid=3;
+}
+message GetQRCodeResponse
+{
+	required int32 ret=1;
+	required string qrcode=2;//二维码URL
+}
+
+//扫描二维码, 获取群消息, 主要是判断用户是否在群
+//method: scanQRCode
+message ScanQRCodeRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required string qrcode=3;
+}
+message ScanQRCodeResponse
+{
+	required int32 ret=1;
+	optional uint64 qrcodeUid=2;
+	optional app.GroupFullInfoPB groupFullInfo=3;
+}
+
+//二维码扫描加入群
+message AddUserByQRCodeRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required string qrcode=3;
+}
+message AddUserByQRCodeResponse
+{
+	required int32 ret=1;
+}
+
+/**
+ * 退群将通知所有群成员
+ * 被动退群: 用户需要收到通知
+ * 主动退群: 用户不需要收到通知
+ * 群主退群: 群主特权转移给下一个人
+ */
+//method: removeUser
+message RemoveUserRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required uint64 gid=3;
+	required uint64 friendId=4;// User may remove itself
+}
+message RemoveUserResponse
+{
+	required int32 ret=1;
+}
+
+//更改群名称通知所有群成员
+//method: groupRename
+message GroupRenameRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required uint64 gid=3;
+	required string name=4;
+}
+message GroupRenameResponse
+{
+	required int32 ret=1;
+}
+
+//发群消息通知所有群成员
+//method: sendGroupMessage
+message SendGroupMessageRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required uint64 gid=3;
+	required int32 type=4;//消息类型 see EChatSubItemType
+	optional uint64 msgid=5;//客户端生成
+	optional bytes data=6;//消息体序列化后的数据
+}
+message SendGroupMessageResponse
+{
+    required int32 ret=1;
+    optional uint64 srvtime=2;//unit is millisecond,server time
+}
+
+//收到群消息badge清零
+//method: markGroupRead
+message MarkGroupReadRequest
+{
+  optional app.MobRequestBase baseinfo = 1;
+  required uint64 uid=2;
+  required uint64 gid=3;
+  required uint64 maxsrvtime=4; // ack del 成功后的最大消息时间戳
+}
+message MarkGroupReadResponse
+{
+  required int32 ret=1;
+}
+
+//群主更新后通知所有群成员
+//method: updateGroupAvatar
+message UpdateGroupAvatarRequest
+{
+	optional app.MobRequestBase baseinfo = 1;
+	required uint64 uid=2;
+	required uint64 gid=3;
+	required string groupAvatar=4;
+}
+message UpdateGroupAvatarResponse
+{
+	required int32 ret=1;
+}
+
+//服务器内部使用
+message GetMuteGroupIds4UserRequest
+{
+	required uint64 uid=1;
+}
+message GetMuteGroupIds4UserResponse
+{
+	required int32 ret=1;
+	repeated uint64 gid=2;
+}
+
+//服务器内部使用
+message GetGroupIds4UserRequest
+{
+	required uint64 uid=1;
+}
+message GetGroupIds4UserResponse
+{
+	required int32 ret=1;
+	repeated uint64 gid=2;
+}
+
+//服务器内部使用
+message DealGroupOffMessageRequest {
+    //required service.OffMessagePB msg=1;
+}
+message DealGroupOffMessageResponse {
+    required int32 ret=1;
+}
+
+message GroupMessageNotify
+{
+	optional uint64 gid=1;//群id
+    optional uint64 fromuid=2;//发送方uid
+    optional string fromnickname=3;//发送方昵称
+    optional string fromavatar=4;//发送者头像
+    optional uint64 touid=5;//接收方uid
+    optional uint64 msgsrvtime=6;//unit is millisecond,服务器收到时间
+    optional uint64 msgid=7;//unit is millisecond, 相当于msgid,客户端生成的消息时间，用于去重
+    required int32 type=8;//see EChatSubItemType
+    optional bytes data=9;//generated by EChatSubItemType, maybe empty
+	optional uint64 pushid=10;//apn push id
+	optional uint64 pushserver=11;//cocopush服务器id
+	optional app.GroupFullInfoPB groupFullInfo=12;//group全量信息
+	optional uint64 rsaversion=13;//接收方的公钥版本号
+    optional bytes crypaeskey=14;//crypaeskey 使用 rsaversion 对应的 publickey 对 aeskey 加密得到, aeskey 用于对明文数据进行 aes 加密
+    optional int32 origdatalen=15;//原始数据的长度
+    optional uint64 eccversion=16;//接收方的公钥版本号,ECC 加密算法
+    optional bytes publickey=17;//服务端公钥
+    optional string aesivkey=18;//AES IV KEY;
+	optional string groupname=19;//群名称
+	optional bool pushmute=20;//pushmute
+    optional bool isVip = 21;//是否vip用户
+}
+
+//group voip 相关
+//先建立 gid 绑定 再查roomid 如果没有 创建roomid
+//发起新的group call，group目前还不存在，服务端会默认建立一个新voip group
+message GroupVoipInviteNewRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    repeated uint64 touid=3;
+    optional uint64 msgid=4;//服务器去重用
+    optional bool checkMinLimit=5;//服务器是否校验人数下限
+}
+
+message GroupVoipInviteNewResponse
+{
+    required int32 ret=1;
+    optional uint64 gid=2;
+    optional string roomid=3;//agora channel id
+    optional app.GroupFullInfoPB groupFullInfo=4;//群信息 + 群成员列表
+    repeated uint64 blockUid=5;//如果用户block返回block的用户
+    //roomid纪录已经存在，则相同的roomid通知过来后忽略
+    optional string vendorkey=6;//调用 agora api 所使用的key
+    repeated uint64 notSupportUid=7;//不支持group call接收方列表
+    optional string aeskey=8;//aes 128 key 用于音视频加密
+    optional string signkey=9;//agora 动态签名key
+    optional int32 width=10;//分辨率宽度
+    optional int32 height=11;//分辨率高度
+    optional int32 maxbites=12;//最大码率
+    optional int32 videoprofile=13;//videoprofile
+}
+
+
+//对已有call ended or missed call的group发起call 如果roomid已存在 得到响应后直接加入
+message GroupVoipInviteRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+    optional uint64 msgid=4;//服务器去重用
+}
+
+message GroupVoipInviteResponse
+{
+    required int32 ret=1;
+    optional string roomid=2;//agora channel id
+    optional string vendorkey=3;//调用 agora api 所使用的key
+    repeated uint64 notSupportUid=4;//不支持group call接收方列表
+    optional string aeskey=5;//aes 128 key 用于音视频加密
+    optional string signkey=6;//agora 动态签名key
+    optional int32 width=7;//分辨率宽度
+    optional int32 height=8;//分辨率高度
+    optional int32 maxbites=9;//最大码率
+    optional int32 videoprofile=10;//videoprofile
+}
+
+//针对具体成员的voip拨打，如果touid不在对应的group中，服务端要将这些touid加入group中，并将group变化同步给其他群成员
+message GroupVoipInviteMemberRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+    required string roomid=4;//agora channel id
+    repeated uint64 touid=5;
+    optional uint64 msgid=6;//服务器去重用
+}
+
+message GroupVoipInviteMemberResponse
+{
+    required int32 ret=1;
+    optional string roomid=2;//agora channel id
+    repeated uint64 blockUid=3;//如果用户block返回block的用户
+    optional string vendorkey=4;//调用 agora api 所使用的key
+    repeated uint64 notSupportUid=5;//不支持group call接收方列表
+    optional string aeskey=6;//aes 128 key 用于音视频加密
+    optional string signkey=7;//agora 动态签名key
+    optional int32 width=8;//分辨率宽度
+    optional int32 height=9;//分辨率高度
+    optional int32 maxbites=10;//最大码率
+    optional app.GroupFullInfoPB groupFullInfo=11;//群信息 + 群成员列表
+    optional int32 videoprofile=12;//videoprofile
+}
+
+//voip邀请通知，EGroupMsgType_VoipInvite
+message GroupVoipInviteMsgPB
+{
+    required app.GroupUserPB operator=1;//发起人
+    required string roomid=2;//agora channel id
+    optional string vendorkey=3;//调用 agora api 所使用的key
+    optional string aeskey=4;//aes 128 key 用于音视频加密
+    optional string signkey=5;//agora 动态签名key
+    optional int32 width=6;//分辨率宽度
+    optional int32 height=7;//分辨率高度
+    optional int32 maxbites=8;//最大码率
+    optional uint64 msgid=9;//客户端去重用
+    optional int32 videoprofile=10;//videoprofile
+}
+
+//接受voip邀请,调用ago进入room成功后调用,若加入room失败则调用reject；若调用服务器失败，则需要退出room
+message GroupVoipAcceptRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+    required string roomid=4;//agora channel id
+    optional uint64 msgid=5;//服务器去重用
+}
+
+message GroupVoipAcceptResponse
+{
+    required int32 ret=1;
+    optional string roomid=2;//request中的roomid不对时，服务器会返回当前的roomid
+    optional string vendorkey=3;//调用 agora api 所使用的key
+    optional string aeskey=4;//aes 128 key 用于音视频加密
+    optional string signkey=5;//agora 动态签名key
+    optional int32 width=6;//分辨率宽度
+    optional int32 height=7;//分辨率高度
+    optional int32 maxbites=8;//最大码率
+    optional int32 videoprofile=9;//videoprofile
+}
+
+//拒绝voip邀请,用户拒绝加入或者加入ago room失败
+message GroupVoipRejectRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+    required string roomid=4;//agora channel id
+}
+
+message GroupVoipRejectResponse
+{
+    required int32 ret=1;
+}
+
+//加入正在通话中的group call
+message GroupVoipJoinRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+    required string roomid=4;
+    optional uint64 msgid=5;//服务器去重用
+}
+
+message GroupVoipJoinResponse
+{
+    required int32 ret=1;
+    optional string roomid=2;
+    optional string vendorkey=3;//调用 agora api 所使用的key
+    optional string aeskey=4;//aes 128 key 用于音视频加密
+    optional string signkey=5;//agora 动态签名key
+    optional int32 width=6;//分辨率宽度
+    optional int32 height=7;//分辨率高度
+    optional int32 maxbites=8;//最大码率
+    optional int32 videoprofile=9;//videoprofile
+}
+
+//挂断group call
+message GroupVoipLeaveRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+    required string roomid=4;//agora channel id
+}
+
+message GroupVoipLeaveResponse
+{
+    required int32 ret=1;
+}
+
+
+//room状态，EGroupMsgType_VoipRoomState
+message GroupVoipRoomStatePB
+{
+    required string roomid=1;//agora channel id
+    required int32 state=2;//0: end, 1: ongoing
+    optional string vendorkey=3;//调用 agora api 所使用的key
+    optional string aeskey=4;//aes 128 key 用于音视频加密
+    optional string signkey=5;//agora 动态签名key
+    optional int32 width=6;//分辨率宽度
+    optional int32 height=7;//分辨率高度
+    optional int32 maxbites=8;//最大码率
+    optional int32 videoprofile=9;//videoprofile
+}
+
+message GroupVoipMemberStatePB
+{
+    required uint64 uid=1;
+    required int32 state=2;//0:offline,1:online,2:connecting
+}
+
+//member状态
+//事件 EGroupMsgType_VoipMemberState 用 GroupVoipBatchMemberStatePB 解析
+message GroupVoipBatchMemberStatePB
+{
+    repeated GroupVoipMemberStatePB member = 1;
+}
+//在Group Voip Control创建的时候调用,另外的在线状态根据通知事件处理
+message GetGroupVoipStateRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+}
+
+message GetGroupVoipStateResponse
+{
+    required int32 ret=1;
+    optional GroupVoipRoomStatePB room=2;//0: end, 1: ongoing
+    optional GroupVoipBatchMemberStatePB batchmember=3;
+}
+
+//客户端成为online状态后保持心跳
+message GroupVoipHealthRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+    required string roomid=4;//agora channel id
+}
+
+message GroupVoipHealthResponse
+{
+    required int32 ret=1;
+    optional uint32 period=2;//心跳间隔，服务端设置
+}
+
+//客户端视频切换事件报告到服务器
+message GroupVoipVideoStateReportRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+    required string roomid=4;
+    optional bool open=5; // true==(open) false==(close)
+    optional uint64 msgid=6;//服务器去重用
+}
+message GroupVoipVideoStateReportResponse
+{
+    required int32 ret=1;
+}
+
+//------------share link------------
+// method: getGroupShareLink
+message GetGroupShareLinkRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+}
+message GetGroupShareLinkResponse
+{
+    required int32 ret=1;
+    optional string link=2;
+    optional uint64 expiretime=3; // ms
+}
+// method: queryGroupShareLink
+message QueryGroupShareLinkRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required string linkKey=3; // 使用linkKey
+}
+message QueryGroupShareLinkResponse
+{
+    required int32 ret=1; // 错误码: 1. 成功(表示该用户不在群中) 2. 用户已经在群中 3. link 已经过期
+    optional app.GroupFullInfoPB groupFullInfo=2; //群信息 + 群成员列表
+}
+// method: revokeGroupShareLink
+message RevokeGroupShareLinkRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+}
+message RevokeGroupShareLinkResponse
+{
+    required int32 ret=1;
+    optional string link=2;
+    optional uint64 expiretime=3; // ms
+}
+// method: addGroupUserByShareLink
+message AddGroupUserByShareLinkRequest
+{
+    required uint64 uid=2;
+    required string linkKey=3; // 使用linkKey
+}
+message AddGroupUserByShareLinkResponse
+{
+    required int32 ret=1; // 错误码: 1. 成功(表示该用户不在群中) 2. 用户已经在群中 3. link 已经过期
+    optional app.GroupFullInfoPB groupFullInfo=2; //群信息 + 群成员列表
+}
+
+//------------qrcode link------------
+// method: getGroupQRCodeLink
+message GetGroupQRCodeLinkRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+}
+message GetGroupQRCodeLinkResponse
+{
+    required int32 ret=1;
+    optional string qrcodeLink=2;
+    optional uint64 expiretime=3; // ms
+}
+// method: queryGroupQRCodeLink
+message QueryGroupQRCodeLinkRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required string qrcodeKey=3; // 使用qrcodeKey
+}
+message QueryGroupQRCodeLinkResponse
+{
+    required int32 ret=1; // 错误码: 1. 成功(表示该用户不在群中) 2. 用户已经在群中 3. qrcode link 已经过期
+    optional app.GroupFullInfoPB groupFullInfo=2; //群信息 + 群成员列表
+}
+// method: revokeGroupQRCodeLink
+message RevokeGroupQRCodeLinkRequest
+{
+    optional app.MobRequestBase baseinfo=1;
+    required uint64 uid=2;
+    required uint64 gid=3;
+}
+message RevokeGroupQRCodeLinkResponse
+{
+    required int32 ret=1;
+    optional string qrcodeLink=2;
+    optional uint64 expiretime=3; // ms
+}
+// method: addGroupUserByQRCodeLink
+message AddGroupUserByQRCodeLinkRequest
+{
+    required uint64 uid=2;
+    required string qrcodeKey=3; // 使用qrcodeKey
+}
+message AddGroupUserByQRCodeLinkResponse
+{
+    required int32 ret=1; // 错误码: 1. 成功(表示该用户不在群中) 2. 用户已经在群中 3. qrcode link 已经过期
+    optional app.GroupFullInfoPB groupFullInfo=2; //群信息 + 群成员列表
+}
+
+/*
+1: 发起创建voip群聊groupVoipinviteNew
+2: 通知被invite的人会收到VoipInvite  event= EGroupMsgType_VoipInvite
+3: 收到在线VoipInvite通知，弹出voip controller
+4.1: 用户点击拒绝，状态改成missed call
+4.2.收到voipinvite离线消息，若时间超过2分钟，则变成missed call;若正在voip（p2p,group voip）中冲突变成missed call
+4.3 missed call后需要调用服务器的groupVoipReject
+5: 否则弹出invite controller,需要调用GetGroupVoipStateRequest查询成员状态
+8: chats列表点击voip group,创建controller(),底部几个按钮先不要显示，转菊花，调用GetGroupVoipStateRequest回来后再显示底部按钮，调用失败提示然后关闭controller
+9: 根据状态事件修改本地room的状态
+10:加入room成功后创建心跳Timer,每隔3秒发送心跳给服务器
+11: 通话中，通知offline的人再上线，调用groupVoipInvite
+12: 通话进行中invite新人,发invite通知给对方groupVoipInviteMember
+13: 客户端本地2个字段来保存状态，一个是bool isMissedCall; int roomStat;显示时需要组合，需要跟PD同步UI
+14: 计时是自管自的，加入room成功后开始计时
+15: 客户端增加一张roomid<====>msgid双向对应表，invite事件收到后查询room表是否存在，若不存在，则message表插入一条记录，room表也插入一条记录，也就是说一个voip通话相当于group里面一条消息,msgtype增加一个voipgroup
+16: 客户端增加一个全局的voip管理类，用来管理p2p voip, group voip，用于解决冲突，显示misdial;以及音频设备管理类，如正在播放语音，需要停掉;android需要处理系统电话冲突; group voip最小化时不能点击语音，视频播放；系统电话进来，中断group voip
+17: 群成员变化会导致chats列表排序改变，但群成员状态改变不会更改chats列表排序更改
+
+*/
+
+//appid=grpproxy
+service GroupChatService
+{
+	rpc createGroup(CreateGroupRequest) returns (CreateGroupResponse);
+	rpc getGroupInfo(GetGroupInfoRequest) returns (GetGroupInfoResponse);
+	rpc addGroupUser(AddGroupUserRequest) returns (AddGroupUserResponse);
+	rpc markSilent(MarkSilentRequest) returns (MarkSilentResponse);
+	rpc setManager(SetManagerRequest) returns (SetManagerResponse);
+	rpc removeUser(RemoveUserRequest) returns (RemoveUserResponse);
+	rpc groupRename(GroupRenameRequest) returns (GroupRenameResponse);
+	rpc sendGroupMessage(SendGroupMessageRequest) returns (SendGroupMessageResponse);
+  rpc markGroupRead(MarkGroupReadRequest) returns (MarkGroupReadResponse);
+	rpc updateGroupAvatar(UpdateGroupAvatarRequest) returns (UpdateGroupAvatarResponse);
+
+    //创建voip群聊时用
+    rpc groupVoipinviteNew(GroupVoipInviteNewRequest) returns (GroupVoipInviteNewResponse);
+    //重新开始voip群聊
+    rpc groupVoipInvite (GroupVoipInviteRequest) returns (GroupVoipInviteResponse);
+    //拉人进群voip聊天,通知offline的人上线
+    rpc groupVoipInviteMember (GroupVoipInviteMemberRequest) returns (GroupVoipInviteMemberResponse);
+    //接收邀请,先调用ago,ago成功后才调用，若失败不需要任何处理
+    rpc groupVoipAccept (GroupVoipAcceptRequest) returns (GroupVoipAcceptResponse);
+    //点拒绝，加入ago room失败,本地voip冲突时调用
+    rpc groupVoipReject (GroupVoipRejectRequest) returns (GroupVoipRejectResponse);
+    //chats页面点击创建controller后点击加入voip时调用,也就是主动进入一个通话中的room
+    rpc groupVoipJoin (GroupVoipJoinRequest) returns (GroupVoipJoinResponse);
+    //离开voip群时调用
+    rpc groupVoipLeave (GroupVoipLeaveRequest) returns (GroupVoipLeaveResponse);
+    //创建controller 时调用
+    rpc getGroupVoipState (GetGroupVoipStateRequest) returns (GetGroupVoipStateResponse);
+    //加入room成功后发送心跳
+    rpc groupVoipHealth (GroupVoipHealthRequest) returns (GroupVoipHealthResponse);
+    //客户端视频切换事件报告到服务器
+    rpc groupVoipVideoStateReport (GroupVoipVideoStateReportRequest) returns (GroupVoipVideoStateReportResponse);
+
+    //获取群分享链接 必须是管理员
+    rpc getGroupShareLink(GetGroupShareLinkRequest)returns (GetGroupShareLinkResponse);
+    //查询群分享链接 返回群相关信息
+    rpc queryGroupShareLink (QueryGroupShareLinkRequest) returns (QueryGroupShareLinkResponse);
+    //重置群分享链接 必须是管理员
+    rpc revokeGroupShareLink (RevokeGroupShareLinkRequest) returns (RevokeGroupShareLinkResponse);
+    //通过群分享链接加入该群
+    rpc addGroupUserByShareLink(AddGroupUserByShareLinkRequest)returns(AddGroupUserByShareLinkResponse);
+
+    //获取群二维码
+    rpc getGroupQRCodeLink(GetGroupQRCodeLinkRequest)returns (GetGroupQRCodeLinkResponse);
+    //查询群二维码 返回群相关信息
+    rpc queryGroupQRCodeLink (QueryGroupQRCodeLinkRequest) returns (QueryGroupQRCodeLinkResponse);
+    //重置群二维码 必须是管理员
+    rpc revokeGroupQRCodeLink (RevokeGroupQRCodeLinkRequest) returns (RevokeGroupQRCodeLinkResponse);
+    //通过群二维码加入该群
+    rpc addGroupUserByQRCodeLink(AddGroupUserByQRCodeLinkRequest)returns(AddGroupUserByQRCodeLinkResponse);
+}
+

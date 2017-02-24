@@ -1,0 +1,40 @@
+{
+  "parser": "babel-eslint",
+  "plugins": [
+    "react"
+  ],
+  "extends": ["eslint:recommended", "plugin:react/recommended"],
+  "env": {
+    "browser": true
+  },
+  "globals": {
+    "ArrayBuffer": false,
+    "Uint8Array": false,
+    "gLocaleSettings": false,
+    "Promise": false,
+    "module": false,
+    "require": true,
+    "$": false,
+    "CryptoJS": false,
+    "WebUploader": false,
+    "__DEV__": false,
+    "chrome": false,
+    "Quill": false
+  },
+  "settings": {
+    "react": {
+      "component-detector": "PureRenderComponent"
+    }
+  },
+  "rules": {
+    "no-unused-vars": ["error", {"args": "none"}],
+    "no-console": "off",
+    "eqeqeq": ["error", "allow-null"],
+    "no-mixed-spaces-and-tabs": "off",
+    "no-extra-boolean-cast": "off",
+    "react/display-name": "off",
+    "react/prop-types": "error",
+    "react/no-danger": "off",
+    "react/no-find-dom-node": "off"
+  }
+}

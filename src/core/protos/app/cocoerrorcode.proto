@@ -1,0 +1,223 @@
+package app;
+option java_package="com.messenger.errorcode.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+
+enum ECocoErrorcode
+{
+	// 0~500 基础ErrorCode
+	ECocoErrorcode_OK = 0;                  // 操作成功
+	
+	ECocoErrorcode_DATABASE_ERROR = 1;      // server端数据库异常
+	
+	ECocoErrorcode_SESSION_TIMEOUTED = 2;   // 旧版本中用于标识pipeKey/sessionKey不可用，
+											// 在新版本中，如果有accessToken过期的需要，可以使用该ErrorCode
+
+	ECocoErrorcode_USER_NOT_EXISTED = 3;    // 由于不想让用户知道是密码错误还是用户名不存在，所以一律返回该错误码
+	
+	ECocoErrorcode_ERROR_SYSTEM = 4;        // 系统错误，server端异常，一些没有其他ErrorCode的server异常，都可用该code
+	
+	ECocoErrorcode_FAILED_ACCESS_RESOURCE = 5;  // 资源访问失败
+	
+	ECocoErrorcode_PERMISSION_DENIED = 6;    // 该操作用户没有权限
+	
+	ECocoErrorcode_INVALID_PARAM = 7;        // 请求包含错误参数
+
+	ECocoErrorcode_PASSWORD_ERROR = 18;//密码错误
+	
+	ECocoErrorcode_USER_PROHIBIT = 19; //系统禁止登陆
+	
+	ECocoErrorcode_USER_LOGINED_OTHERDEVICE = 20; //账户在其他地方登陆了
+	
+	ECocoErrorcode_USER_TEMPPROHIBIT = 21; //系统临时禁止登陆,如IP过于频繁
+
+    ECocoErrorcode_USER_BAD_ACCESS_SERVER = 22;//错误的access_serever
+
+	ECocoErrorcode_USER_PROHIBIT_HINT = 23; //系统禁止登陆前提示
+
+	
+	//501~1000用户注册
+
+	//用户注册(501-600)
+	ECocoErrorcode_SIGNUP_INVALID_PHONE = 501;//手机号码无效
+	ECocoErrorcode_SIGNUP_PHONE_ALREADY_REGISTERED = 502;//手机号码已被注册
+	ECocoErrorcode_SIGNUP_PASSWORD_ALREADY_SET = 503;//密码已设置
+	ECocoErrorcode_SIGNUP_EXCEED_MAX_TOTAL = 504;//短信发送超过次数(未使用)
+	ECocoErrorcode_SIGNUP_INVALID_AUTHENTICODE = 505;//无效的验证码
+	ECocoErrorcode_SIGNUP_EXPIRED_AUTHENTICODE = 506;//验证码过期
+	ECocoErrorcode_SIGNUP_ERROR_INPUT_AUTHENTICODE = 507;//验证码错误
+	ECocoErrorcode_SIGNUP_FAILED_REGISTER = 508;//注册失败
+	ECocoErrorcode_SIGNUP_INVALID_GENDER = 509;//无效性别
+	ECocoErrorcode_SIGNUP_INVALID_TOKEN = 510;//无效的Device Token
+	ECocoErrorcode_SIGNUP_INVALID_PASSWORD = 511;//密码无效
+	ECocoErrorcode_SIGNUP_TOKEN_ALREADY_REGISTERED = 512;//Device Token已被注册
+	ECocoErrorcode_SIGNUP_INVALID_NICKNAME = 513;//无效昵称
+	ECocoErrorcode_SIGNUP_INVALID_USAGE = 514;//Validate Phone类型无效(usage: 1-注册 2-登录)
+	
+	//In-App Verify(701~800)
+	ECocoErrorcode_VERIFY_APP_INVALID_PHONE = 701;//无效的手机号码
+	ECocoErrorcode_VERIFY_APP_PHONE_ALREAD_AUTHED = 702;//号码已被绑定
+	ECocoErrorcode_VERIFY_APP_INVALID_AUTHENTICODE = 703;//无效的验证码
+	ECocoErrorcode_VERIFY_APP_AUTHENTICODE_INPUT_ERROR = 704;//验证码错误
+	ECocoErrorcode_VERIFY_APP_AUTHENTICODE_EXPIRED = 705;//验证码已过期
+	ECocoErrorcode_VERIFY_APP_USER_ALREADY_AUTH_PHONE = 706;//用户已绑定手机
+
+	//Check Version(801~900)
+	ECocoErrorcode_CHECK_VERSION_INVALID_DEVICE_TYPE = 801;//无效的设备类型
+	ECocoErrorcode_CHECK_VERSION_INVALID_APP_VERSION = 802;//无效的版本号
+
+	//1001~2000 分配给P2P消息
+	ECocoErrorcode_SENDP2P_NEEDFRIENDVERIFICATION=1001; // 自己不在对方好友列表里，需要对方验证
+	ECocoErrorcode_SENDP2P_INVALIDMESSAGE = 1002; // 消息内容不正确，比如发送图片，但内容却为空
+	ECocoErrorcode_SENDP2P_MESSAGEALREADYSENT = 1003; // 该消息已发送过
+	ECocoErrorcode_SENDP2P_SENDMSG_TOOFREQUENT=1004;//发送消息太快
+	ECocoErrorcode_SENDP2P_SEND_SMS_EXCEED_LIMIT = 1005; // 接收方不存在时 短信发送总次数超过限制
+	ECocoErrorcode_SENDP2P_SEND_SMS_FREQUENCY_LIMIT = 1006; // 接收方不存在时 短信发送频率过高
+	ECocoErrorcode_SENDP2P_SEND_SMS_BUCKET_LIMIT = 1007; // 接收方不存在时 一段时间内超过发送次数
+	ECocoErrorcode_SENDP2P_FREQUENTLY = 1008; // 客户端发送消息频率过高 超过一秒钟限制频率目前配置为10
+	ECocoErrorcode_SENDP2P_INVALID_ECCVERSION=1009; // 接收方的ECC公钥已经变了
+
+	//2001~3000 分配给FriendsApp，FriendService
+	ECocoErrorcode_FRIENDSHIP_BLOCKED = 2001;          // 已被对方拉黑了
+	ECocoErrorcode_FRIENDSHIP_ALREADYFRIEND = 2002;    // 已经是好友
+	ECocoErrorcode_FRIENDSHIP_INVALIDALIAS = 2003;     // 好友的别名不合法
+	ECocoErrorcode_FRIENDSHIP_INVITEBYCLIENT = 2004;   // 邀请短信须通过客户端发送
+
+	//3001~4000 分配给Group消息服务
+	ECocoErrorcode_GROUPCHAT_USER_ALREADY_IN_GROUP = 3001;//用户已经在群里
+	ECocoErrorcode_GROUPCHAT_MESSAGE_ALREADY_SENT = 3002;//消息已发送 重复发送
+	ECocoErrorcode_GROUPCHAT_WITHOUT_PERMISSION = 3003;//用户没有权限
+	ECocoErrorcode_GROUPCHAT_INVLID_GROUPID = 3004;//群ID不存在 (voip 复用)
+	ECocoErrorcode_GROUPCHAT_USER_NOT_EXISTED = 3005;//用户不存在
+	ECocoErrorcode_GROUPCHAT_USER_LIMIT_EXCEEDED = 3006;//超过群用户数量限制
+	ECocoErrorcode_GROUPCHAT_FAILED_CREATE_GROUP = 3007;//创建群失败
+	ECocoErrorcode_GROUPCHAT_FAILED_ADD_GROUP_USER = 3008;//添加群用户失败
+	ECocoErrorcode_GROUPCHAT_INVALID_MESSAGE = 3009;//不合法的消息
+	ECocoErrorcode_GROUPCHAT_INVALID_GROUP_NAME = 3010;//不合法的群名称
+	ECocoErrorcode_GROUPCHAT_INVALID_GROUP_QRCODE = 3011;//二维码不存在
+	ECocoErrorcode_GROUPCHAT_SENDMSG_TOOFREQUENT = 3012;//发送消息太快
+	ECocoErrorcode_GROUPCHAT_ALREADY_MANAGER = 3013;//已经是管理员了
+	ECocoErrorcode_GROUPCHAT_INVALID_DELETE = 3014;//不合法的删人操作
+	ECocoErrorcode_GROUPCHAT_GROUP_DUPLICATED_CREATE = 3015;//重复创建相同的群 (voip 不会使用此错误码)
+	ECocoErrorcode_GROUPCHAT_SHARE_LINK_EXPIRE = 3016;//share link 到期
+
+	//4001~4500 AccountApp
+	ECocoErrorcode_ACCOUNT_APP_IOS_CORE_TEXT_ATTACK = 4001; // 文本格式问题
+	ECocoErrorcode_ACCOUNT_APP_INVALID_NAME = 4002; // 昵称不合法
+	ECocoErrorcode_ACCOUNT_APP_INVALID_COCO_ID = 4003; // coco id 不合法
+	ECocoErrorcode_ACCOUNT_APP_FORBIDDEN_COCO_ID = 4004; // coco id 包含 coco instanza 等
+	ECocoErrorcode_ACCOUNT_APP_CHANGE_COCO_ID_BLOCKED = 4005; // coco id 修改被屏蔽
+	ECocoErrorcode_ACCOUNT_APP_COCO_ID_EXISTED = 4006; // coco id 已存在
+	ECocoErrorcode_ACCOUNT_APP_INVALID_STATUS = 4007; // 签名不合法
+	ECocoErrorcode_ACCOUNT_APP_INVALID_PASSWORD = 4008; // 密码不合法
+	ECocoErrorcode_ACCOUNT_APP_PASSWORD_NOT_CORRECT = 4009; // 原密码错误
+	ECocoErrorcode_ACCOUNT_APP_INVALID_DEVICE_TOKEN = 4010; // device token 不合法
+	ECocoErrorcode_ACCOUNT_APP_INVALID_EMAIL = 4011; // email 不合法
+	ECocoErrorcode_ACCOUNT_APP_USER_NOT_EXIST = 4012; // 搜索用户不存在
+	ECocoErrorcode_ACCOUNT_APP_INVALID_GENDER = 4013; // gender 不合法
+	ECocoErrorcode_ACCOUNT_APP_VERIFIED_EMAIL = 4014; // email 已经被人使用并激活
+	ECocoErrorcode_ACCOUNT_APP_ALREADY_VERIFIED_EMAIL= 4015; // email 已经被激活
+	ECocoErrorcode_ACCOUNT_APP_UID_LIST_EMPTY = 4016; // get simple coco account list 输入参数为空
+	ECocoErrorcode_ACCOUNT_APP_NEW_PASSWORD_EMPTY = 4017; // new password empty
+	ECocoErrorcode_ACCOUNT_APP_INVALID_BIRTHDAY = 4018; // 生日设置不合法
+    ECocoErrorcode_ACCOUNT_APP_NAME_INVALID_LENGTH = 4019;//长度不合法
+    ECocoErrorcode_ACCOUNT_APP_NAME_CONTAINS_EMOJI = 4020;//包含emoji字符
+	ECocoErrorcode_ACCOUNT_APP_DATANOTCHANGED=4021;//数据客户端与服务器一致没有变化
+	ECocoErrorcode_ACCOUNT_APP_MOBILE_INVALID=4022;//用户手机输入手机和uid不一致
+	ECocoErrorcode_ACCOUNT_APP_TOO_MANY_FAV_GROUP=4023;//超出添加GROUP数目
+
+	//4501~5000 UDB
+
+    //5001~6000  cocofsapp
+    ECocoErrorcode_FSAPP_BAD_REQUEST = 5001;
+    ECocoErrorcode_FSAPP_FILE_NOT_EXIST = 5002;
+    ECocoErrorcode_FSAPP_READ_FILE_ERROR = 5003;
+    ECocoErrorcode_FSAPP_IMG_RESIZE_ERROR = 5004;
+    ECocoErrorcode_FSAPP_AMR2AAC_ERROR = 5005;
+    ECocoErrorcode_FSAPP_AAC2AMR_ERROR = 5006;
+
+    //6001~7000  PHONE/SMS Service
+    ECocoErrorcode_PHONE_INVALIDNUMBER = 6003;
+    ECocoErrorcode_PHONE_FAILEDSENDSMS = 6004;
+    ECocoErrorcode_PHONE_FAILEDMAKEPHONE = 6005;
+
+    //7000~8000 公众帐号相关错误码
+    ECocoErrorcode_OFFICIAL_INVALID_SUBSCRIBER=7000; // 不合法的订阅者
+    ECocoErrorcode_OFFICIAL_ACCOUNT_NOT_EXIST=7001; // 公众帐号不存在
+    ECocoErrorcode_OFFICIAL_AGENT_NOT_EXIST=7002; // 公众帐号客服不存在
+
+
+    ECocoErrorcode_OFFICIAL_PUSH_MSG_NOT_EXIST=7003; // 公众帐号消息不存在
+    ECocoErrorcode_OFFICIAL_PUSH_MSG_INVALID=7004; // 消息不合法
+    ECocoErrorcode_OFFICIAL_SINGLE_PUSH_OVER_LIMIT=7005; // single push 人数超过限制
+    ECocoErrorcode_OFFICIAL_RECEIVER_NOT_EXIST=7007; // 该用户不存在
+
+    ECocoErrorcode_OFFICIAL_ACCOUNT_SUB_NOT_SUPPORT_USER_REGION=7006; // 公众账号不支持用户所在的国家订阅
+
+
+	// 11001~12000 VOIP
+	ECocoErrorcode_VOIP_RECEIVER_NOT_SUPPORT_VOIP = 11001; // 接收方不支持 voip 功能
+	ECocoErrorcode_VOIP_CONNECT_ANYCHAT_SERVER_TIMEOUT = 11002; // 连接 anychat 服务器 超时
+	ECocoErrorcode_VOIP_GET_ROOMID_FAILED = 11003; // 获取 roomid 失败
+	ECocoErrorcode_VOIP_ONEWAY_FRIENDSHIP = 11004; // 单向好友 提示客户端
+	ECocoErrorcode_VOIP_CALLER_NOT_SUPPORT_RTC = 11005; // anychat 打给 rtc
+	ECocoErrorcode_VOIP_CONNECT_TURN_SERVER_TIMEOUT = 11006; // 连接 turn 服务器 超时
+	ECocoErrorcode_VOIP_RECEIVER_NOT_EXIST_VOIP = 11007; // 接收方不存在
+	ECocoErrorcode_VOIP_ONLY_FRIENDS_FOR_VOIP = 11008; // only friends for voip
+	ECocoErrorcode_VOIP_RECEIVER_NOT_SUPPORT_VIDEO = 11009; // 接收方不支持 video 功能
+	ECocoErrorcode_VOIP_RECEIVER_COUNTRY_NOT_SUPPORT_VOIP = 11010; //接受方运营商没开通VOIP
+	ECocoErrorcode_VOIP_COUNTRY_NOT_SUPPORT_VOIP = 11011; //拨打方运营商没开通VOIP
+	ECocoErrorcode_VOIP_NOT_SUPPORT_VOIP = 11012; //拨打方没开通VOIP
+	ECocoErrorcode_VOIP_CALLER_DEVICE_NOT_SUPPORT_VIDEO = 11013; //拨打方不支持视频功能
+	ECocoErrorcode_VOIP_RECEIVER_DEVICE_NOT_SUPPORT_VIDEO = 11014; //接收方不支持视频功能
+
+	// 13000~14000 GROUP VOIP
+	ECocoErrorcode_GROUPVOIP_FAILED_CREATE_ROOM = 13001; // 创建 group voip room 失败
+	ECocoErrorcode_GROUPVOIP_ROOM_NOT_EXIST = 13002; // 客户端传递roomid 不存在
+	ECocoErrorcode_GROUPVOIP_ROOM_CHANGED = 13003; // 该群的roomid发生改变 客户端收到该错误码 需要进入新的roomid中
+	ECocoErrorcode_GROUPVOIP_COUNTRY_NOT_SUPPORT = 13004; // 提示拨打方用户所在国家目前不支持
+	ECocoErrorcode_GROUPVOIP_DEVICE_NOT_SUPPORT = 13005; // 提示拨打方用户设备不支持
+	ECocoErrorcode_GROUPVOIP_USER_NUMBER_TOO_LITTLE = 13006; //低于用户数量下限
+
+
+	//16001~17000 sns
+	ECocoErrorcode_SNS_TOPIC_NOT_EXISTS = 16001; //
+	ECocoErrorcode_SNS_COMMENT_NOT_EXISTS = 16002; //
+	ECocoErrorcode_SNS_DUPLICATED_LIKE = 16003; //重复赞
+
+	// 17001~18000 speedyturn
+    // common errors
+    CocoErrorcode_STURN_EXCEPTION=17001; // exception
+    CocoErrorcode_STURN_NULL_ADDRESS=17002; // address is null
+    CocoErrorcode_STURN_INVALID_ADDRESS=17003; // invalid address
+    CocoErrorcode_STURN_IN_PROCESSING = 17004; // in processing
+    CocoErrorcode_STURN_PORT_UNREACHABLE=17005; // port unreachable
+    CocoErrorcode_STURN_PROFILE_NOT_EXISTS=17006; // profile not exist
+    CocoErrorcode_STURN_TASK_NOT_EXIST=17007; // task not exist
+    CocoErrorcode_STURN_TIMEOUT=17008; //  timeout
+    CocoErrorcode_STURN_NOT_SUPPORT=17009; // not support
+    CocoErrorcode_STURN_IN_USING=17010; // alreay in using
+    CocoErrorcode_STURN_INVALID_SEQNUM=17011; // seq number is invalid
+
+    // stun error
+    CocoErrorcode_STURN_STUN_CHECK_FAILED=17040;
+
+
+    //room server errors
+    CocoErrorcode_DUPLICATE_CREATE_ROOM=18001;
+    
+    // upload error
+    CocoErrorcode_UPLOAD_INVALID_OFFSET = 19001;
+    CocoErrorcode_UPLOAD_SAVE_EXCEPTION = 19002;
+    CocoErrorcode_UPLOAD_INVALID_USER = 19003;
+    CocoErrorcode_UPLOAD_WAIT_STREAM = 19004;
+    CocoErrorcode_UPLOAD_FILE_TOOLARGE=19005;
+    CocoErrorcode_UPLOAD_INVALID_PARAM=19006;
+    CocoErrorcode_UPLOAD_FILE_CORRUPTED=19007;
+    CocoErrorcode_UPLOAD_BLOCK_CORRUPTED=19008;
+
+	//charge error
+	CHARGE_RECEIPT_NOT_VALID = 20001;                    // 非法回执
+}

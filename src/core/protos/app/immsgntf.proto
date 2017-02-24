@@ -1,0 +1,54 @@
+package app;
+option java_package="com.messenger.javaserver.immsgntf.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+
+enum ESessionType {
+    ESessionType_P2P = 0; //单聊消息
+    ESessionType_GroupChat = 1; //群聊消息
+    ESessionType_GroupVoip = 5; //群视频消息
+    ESessionType_NearbyGroup = 2; //周边群相关消息
+    ESessionType_FriendMsg = 3; //好友相关消息
+    ESessionType_PublicAppMsg = 4; //公众平台消息
+    ESessionType_P2PAck = 1000;
+    ESessionType_SYSTEM_MSG = 1001; //系统消息
+    ESessionType_SYSTEM_EXTEND_MSG = 1002; //扩充后的系统相关消息
+	  ESessionType_SELF_NOTIFY = 2000; //多端同步自己的主动请求
+}
+
+//method: MsgNtf or OffMsgNtf
+message MessageNtfPB
+{
+	optional uint64 touid=1;
+	required uint64 partuid=2;
+	required uint64 msgsrvtime=3;
+	required uint64 msgid=4;
+	required int32 sessiontype=5;//参见ESessionType
+	optional bytes data=6;
+	optional uint64 sessionid=7;
+	optional int32 status=8;
+}
+//服务器批量发送消息通知客户端，一般是在离线消息里通知回来 
+//method:OffBatchNtf, OffAckBatchNtf
+message MessageBatchNotifyPB
+{
+	optional uint64 touid=1;
+	required int32 sessiontype=2;
+	repeated MessageNtfPB msgs=3;
+	optional bool  issessionlastbatch=4;//是否是该Session的最后一批通知消息
+	optional bool  isofflastbatch=5;//是否是离线消息的最后一批
+}
+
+//method: PingNtf
+message PingNtfPB
+{
+	optional uint64 touid=1;
+	required string tosrvip=2;
+	required int32  tosrvport=3;
+	required int32  pingcount=4; 
+}
+
+
+

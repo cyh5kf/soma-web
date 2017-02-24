@@ -1,0 +1,33 @@
+@import "../../../../components/_variables";
+
+.message-item.text-msg {
+  .icon-msg-menu {
+    background: linear-gradient(to right, fade(@color-white, 50), @color-white 50%);
+  }
+
+  .message-item-content {
+    max-width: 438px;
+    position: relative;
+    font-size: 14px;
+    line-height: 20px;
+    padding: 6px 11px;
+    word-break: break-word;
+    color: @color-light-text-primary;
+  }
+
+  .msg-time-status {
+    padding-left: 16px;
+    display: inline-block;
+    &.ts-placeholder {
+      position: static;
+      visibility: hidden;
+    }
+  }
+
+  //都显示成蓝色
+  a {
+    color: @color-blue-dark;
+    text-decoration: underline;
+    cursor: pointer;
+  }
+}

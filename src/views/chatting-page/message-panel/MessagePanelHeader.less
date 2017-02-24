@@ -1,0 +1,55 @@
+@import "../../../components/_variables";
+@import "../../../components/_mixins";
+
+.message-panel-header {
+  display: flex;
+  align-items: center;
+  height: 59px;
+  padding: 0 15px;
+  background-color: @color-blue-dark;
+  border-left: 1px solid @color-split-line-header;
+
+  .session-logo {
+    flex-shrink: 0;
+    margin-right: 10px;
+    cursor: pointer;
+    .accountAvatar {
+      width: 40px;
+      height: 40px;
+      line-height: 40px;
+    }
+  }
+
+  .session-info {
+    flex-grow: 1;
+    cursor: pointer;
+    
+    .session-name {
+      color: @color-white;
+    }
+    .session-desc {
+      padding-top: 2px;
+      font-size: 12px;
+      line-height: 14px;
+      color: fade(@color-white, 70%);
+    }
+  }
+
+  .tb-show-session-details {
+    flex-shrink: 0;
+    .circle(36px);
+    background: url(images/ic_chatinfo_white_36px.png) center/contain no-repeat;
+    cursor: pointer;
+    &:hover {
+      background-color: @color-bg-tb-hover;
+    }
+  }
+  &.group-chat .tb-show-session-details {
+    background-image: url(images/ic_groupinfo_white_36px.png);;
+  }
+
+
+  .sessionDescLoading{
+    float: left;
+  }
+}

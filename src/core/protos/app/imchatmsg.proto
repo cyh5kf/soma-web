@@ -1,0 +1,311 @@
+package app;
+option java_package="com.messenger.javaserver.imchatserver.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+
+enum EVoipRouteType {
+    EVoipRouteType_Agora = 0; // use agora
+    EVoipRouteType_P2P = 2; // use p2p 内网或外网
+    EVoipRouteType_SPEEDY_PROXY = 3; // use speedy 加速
+    EVoipRouteType_COTURN_PROXY = 4; // use coturn 加速
+}
+
+enum ERTCVoiceCodecType {
+    ERTCVoiceCodecType_ISAC = 0;
+    ERTCVoiceCodecType_ILBC = 1;
+    ERTCVoiceCodecType_OPUS = 2; //正常网络, SampleRate: 16000, Channel: 1
+    ERTCVoiceCodecType_OPUS_8K = 3; //窄带网络, SampleRate: 8000, Channel: 1
+}
+
+enum EChatSubItemType {
+    EChatSubItemType_EXTENDED_TYPE_IMAGE = -1;
+    EChatSubItemType_Audio = 1;
+    EChatSubItemType_Text = 2;
+    EChatSubItemType_Image=3;
+    EChatSubItemType_RECEIVED=4;//收到应答，旧版本不保存在数据库
+    EChatSubItemType_TYPING=5;//不需要保存
+    EChatSubItemType_SPEAKING=6;//不需要保存
+    EChatSubItemType_GROUP=7;
+    EChatSubItemType_LOADING=8;//不需要保存，在Question插件用到，Server端不用该类型
+    EChatSubItemType_TOUCH=9;//不需要保存, 自动销毁图片，该特性没有上线
+    EChatSubItemType_READ=10;//自动销毁图片，该特性没有上线
+    EChatSubItemType_SAVED=11;//不需要保存 自动销毁图片，该特性没有上线
+    EChatSubItemType_OrigImage=15;
+    EChatSubItemType_File=16; //旧版本没有实现该类型
+    EChatSubItemType_Webclip=17;// web page share
+    EChatSubItemType_Sticker=18;
+    EChatSubItemType_ShareSticker=19; //旧版本有实现，但没有开放给线上版本用户
+    EChatSubItemType_Voip=20; //旧版本有实现，但没有开放
+    EChatSubItemType_RTC=21; //RTC版本
+    EChatSubItemType_RichMedia=22; // rich media类型，专用于coco team推送消息
+    EChatSubItemType_MutliImage=23;// 多图，朋友圈里用
+    EChatSubItemType_MultiRichMedia=24; // 公众平台使用
+    EChatSubItemType_Plain_Text=25; // 将原先的文本封装起来
+    EChatSubItemType_ContactCard=26; // SOMA 通讯录卡片
+    EChatSubItemType_Location=27; // SOMA 地理位置
+    EChatSubItemType_ShortVideo=28; // SOMA 小视频
+    EChatSubItemType_Agora_Voip=29; // SOMA Agora Voip
+    EChatSubItemType_OfficialCard=30; // Official Card
+    EChatSubItemType_Document=31; // Document File
+
+    //100 ~199 see EGroupNearbySystemMsgType
+    //200 ~299 see EGroupNearbyActionMsgType
+
+    EChatSubItemType_Sys=1000; // 尚未使用
+}
+
+// sessiontype == ESessionType_SYSTEM_EXTEND_MSG 见 immsgntf.proto 中的 ESessionType
+enum ESysSubItemType {
+    ESysSubItemType_Recommend_Official = 1; // 公众帐号推荐 见 offudbsub.proto 中的 RecommendedOfficialPB
+}
+
+message IMChatTextItemPB
+{
+    optional string text=1;
+    repeated uint64 atUids=2;// 客户端发送消息的时候，如果有@消息，则将被@的uid放在这里
+}
+message IMChatImageItemPB
+{
+	optional uint64 filesize=1;
+	optional string imgprevurl=2;//if is image, is preview img url
+    optional string imgurl=3;//if empty, data is the content
+    optional uint32 imgwidth=4;
+    optional uint32 imgheight=5;
+    optional bytes thumb_bytes=6;
+    optional string cryptimgurl=7;
+    optional string  fileaes256key=10;
+}
+message IMChatOrigImageItemPB
+{
+	optional uint64 filesize=1;
+	optional string imgprevurl=2;//if is image, is preview img url
+    optional string imgurl=3; 
+    optional uint32 imgwidth=4;
+    optional uint32 imgheight=5;
+    optional string origimgurl=6;//if empty, data is the content
+    optional uint32 origimgwidth=7;
+    optional uint32 origimgheight=8;
+    optional bytes thumb_bytes=9;
+    optional string  fileaes256key=10;
+    optional string cryptimgurl=11;
+    optional string cryptorigimgurl=12;
+}
+message IMChatAudioItemPB
+{
+	optional uint64 filesize=1;
+	optional string fileurl=2; 
+    optional int32 playduration=3; 
+    optional int32 audiotype=4;//0==AAC,1==AMR
+    optional string voice_mail_id=5; //如果是voice call的语音消息会有内容
+    optional string cryptfileurl=6;
+    optional string fileaes256key=10;
+}
+
+message IMChatShortVideoItemPB
+{
+	optional uint64 videosize=1;
+	optional string videourl=2;
+    optional int32 playduration=3;
+    optional int32 videotype=4;//0=mp4
+    optional string imgurl=5;
+    optional bytes thumb_bytes=6;
+    optional string cryptvideourl=7;
+    optional string cryptimgurl=8;
+    optional string  fileaes256key=10;
+}
+
+message IMChatLocationItemPB
+{
+	required double lat=1;//纬度
+	required double lngt=2;//经度
+	optional string poiname=3;//该地点的名字
+}
+
+enum EVoipActionType
+{
+	EVoipActionType_Issued=0;//发起请求
+	EVoipActionType_Cancel=1;//取消通话 
+	EVoipActionType_Accept=2;//接受请求
+	EVoipActionType_Reject=3;//拒绝请求
+	EVoipActionType_Close=4;//结束通话
+	EVoipActionType_Busy=5;//对方正在通话中
+	EVoipActionType_SysError=6;//登陆房间错误，系统错误
+    EVoipActionType_DeviceError=7;//硬件不支持
+    EVoipActionType_OneWay_Friendship=8;//单向好友
+    EVoipActionType_RtcMsg=9;//发送rtc信令消息
+    EVoipActionType_TimeCount=10;//开始计时时 客户端要将begintime 发送给服务器
+    EVoipActionType_NetSwitch=11;//网络切换
+    EVoipActionType_NetSwitchSuccess=12;//网络切换成功
+    EVoipActionType_SwitchToVoice=13;//视频转语音
+    EVoipActionType_HalfConnected=14; //本地连接成功
+}
+message VideoCallParameter
+{
+	required int32 minQp=1;//QP的最小值
+	required int32 maxQp=2;//QP的最大值
+	required int32 maxFrameRate=3;//最大帧率
+	required int32 minWidth=4;//最小分辨率宽度
+	required int32 minHeight=5;//最小分辨率高度
+	required int32 maxWidth=6;//最大分辨率宽度
+	required int32 maxHeight=7;//最大分辨率高度
+	required int32 maxBitrate=8;//最大码率
+	optional bool cpuAdaption=9;//是否随CPU情况调节分辨率;iphone4等低端机器为true
+	optional bool scaler=10;//是否随码流情况调节分辨率,目前没有启用,应该为false
+	optional int32 startVideoQuality=11;//初始视频质量
+	optional int32 lowestVideoQuality=12;//最低视频质量
+	optional int32 lowQpThreshold=13;//判断视频分辨率上升的QP阈值
+	optional int32 frameDropPercentThreshold=14;//判断视频分辨率下降的丢帧率阈值
+    optional int32 videoStartBitrate=15;
+    optional int32 videoMinBitrate=16;
+    optional int32 highestVideoQuality=17;//最好视频质量（最高视频质量为0，+1依次降低）
+}
+message WebRtcAudioParameter
+{
+    // AudioSource.DEFAULT = 0 (for ZTE N880G)
+    // AudioSource.MIC = 1
+    // AudioSource.VOICE_CALL = 4
+    // AudioSource.VOICE_COMMUNICATION = 7  (default)
+    optional int32 audioRecordSourceType=1;
+
+    // AudioManager.STREAM_VOICE_CALL = 0 (default)
+    // AudioManager.STREAM_SYSTEM = 1
+    // AudioManager.STREAM_MUSIC = 3 (for ZTE N880G)
+    optional int32 audioTrackStreamType=2;
+}
+message IMChatRTCItemPB
+{
+    required int32 action_type=1; // see EVoipActionType
+    optional int32 rtc_type=2; // 0==voice,1==video;
+    repeated IceServerPB ice_server=3; // ice server 列表
+    optional int32 room_id=4; // room id
+    optional int32 duration=5; // 通话时长
+    optional string rtc_msg=6; // rtc信令消息
+    optional uint64 created=7; // 创建session的时间 用于区分不同的session
+    optional bool caller=8; // true主叫方 false被叫方
+    optional uint64 connected_time=9; // 点接通按钮的客户端时间 发送给对方 EVoipActionType_Issued + connected_time
+    optional uint64 begin_time = 10; // 开始计时的客户端时间 发送给对方 EVoipActionType_TimeCount + begin_time
+    optional uint64 closed_time = 11; // 点击挂断的客户端时间 发送给对方 EVoipActionType_Close + closed_time
+    optional bool broadbandnet= 12; //是否是宽带网络
+    optional string machinemodel=13; //机器型号，如iphone4,iphone4s
+	optional int32 resolutiontype=14; //0==low,1==middle,2==high(640)
+	optional VideoCallParameter videoparameter=15; //视频相关参数
+	optional int32 voicecodetype=16; //ERTCVoiceCodecType
+	optional string candidatepair=17; //localip:port,远端IP:Port
+	optional string rtcoffer=18;
+	optional string rtcanswer=19;
+	repeated string relayservercandidate=20; //预先设置好的中继服务器的candidate
+	optional string aeskey=21; //udp 交换信令aes密码
+	optional uint64 relayrandkey=22; //udp 中继随机应子
+	optional bool useoffer=23; //是否使用服务器提供的offer
+    optional bool disablep2p=24; //控制是否禁用p2p
+    optional WebRtcAudioParameter audioparameter=25; //WebRtcAudioParameter 根据机型适配
+	optional bool normalhangup=26[default=true]; // 客户端收到action_type为挂断类型的时候 这个字段为true为正常挂断 false为设备初始化失败后自动挂断
+    optional float packetLossRate=27; // 客户端在挂断电话时 将丢包率通过这条消息发送到服务端
+    optional string icePwd=28;
+  	optional string inline=29;
+  	optional string audiorelaysrv=30;//udp 中继服务器ip:port
+  	optional string videorelaysrv=31;//udp 中继服务器ip:port
+  	optional bool enableFec=32;//是否启用offer中的视频前向纠错参数
+    optional bool enableNack=33;//是否启用丢包反馈机制
+    optional bool enableRtpCrypt=34;//是否把RTP包进行加密,使用aeskey进行AES256进行加密
+    optional int32 rtcversion=35;//0表示当前版本 新加密版本是1 往后依次类推
+    optional bool generalVoipEncrypt=36;//coturn 支持加密
+    optional string realm=37;//获取realm减少一次与coturn的交互
+    optional int32 speedyPriority=38;//speedy优先级
+    optional bool udpEncrypt2=39;//新加密方式
+}
+
+message IMAgoraChatRTCItemPB
+{
+    required int32 action_type=1;       // see EVoipActionType
+    optional int32 rtc_type=2;          // 0==voice,1==video;
+    optional string room_id=3;          // room id
+    optional uint64 created=4;          // 创建session的时间 用于区分不同的session
+    optional bool caller=5;             // true主叫方 false被叫方
+    optional uint64 connected_time=6;   // 点接通按钮的客户端时间 发送给对方 EVoipActionType_Issued + connected_time
+    optional uint64 begin_time=7;       // 开始计时的客户端时间 发送给对方 EVoipActionType_TimeCount + begin_time
+    optional uint64 closed_time=8;      // 点击挂断的客户端时间 发送给对方 EVoipActionType_Close + closed_time
+    optional bool broadbandnet=9;       // 是否是宽带网络
+    optional string machinemodel=10;    // 机器型号，如iphone4,iphone4s
+    optional bool normalhangup=11[default=true]; // 客户端收到action_type为挂断类型的时候 这个字段为true为正常挂断 false为设备初始化失败后自动挂断
+    optional string vendorkey=12;       //调用 agora api 所使用的key
+    optional string aeskey=13;          //aes 128 key 用于音视频加密
+    optional string signkey=14;         //agora 动态签名key
+    optional int32 duration=15;         // 通话时长
+    optional int32 videoprofile=16;     // videoprofile
+    optional string channelkey=17;      // channel key
+    optional string recordkey=18;       // record key
+}
+
+message IMChatContactCardItemPB
+{
+	required string contactJson=2;
+}
+
+message IMChatOfficialCardItemPB
+{
+	required string officialJson=2;
+}
+
+message IMChatDocumentItemPB
+{
+    required int32 doc_type=1; // 0==doc;1==ppt;2==xls;3==pdf
+    optional string file_name=2;
+    optional uint64 file_size=3;
+    optional string file_url=4;
+    optional string cryptfileurl=5;
+    optional string fileaes256key=6;
+}
+
+message IMChatWebClipItemPB
+{
+	optional string title=1;
+	optional string desc=2;
+	optional string url=3;
+	optional string imgurl=4;
+}
+
+message IMChatStickerItemPB
+{
+    optional uint64 stickerid=1;
+    optional uint64 setid=2; 
+}
+message IMChatShareStickerItemPB
+{
+	optional uint64 setid=1;
+	optional string stickertitle=2;
+}
+
+// only for cocoteam
+message IMChatRichMediaItemPB
+{
+	required string title=1; // 标题
+	optional string imgurl=2; // 图片内容对应url(图片尺寸根据屏幕分辨率获取)
+	optional string desc=3; // 描述文字
+	optional string url=4;  // coco team rich media 消息的跳转链接，可能为空
+	optional uint32 urltype=5; // 标明url对应的是一个网页，还是一张图片，方便客户端展示和操作。网页为1，图片为2
+	optional uint32 imgWidth = 6;//原图宽度
+	optional uint32 imgHeight = 7;//原图高度
+}
+// IMChatRichMediaItemPB中的urltype
+enum EChatRichItemUrlType
+{
+	EChatRichItemUrlType_WEBPAGE=1;
+	EChatRichItemUrlType_IMAGE=2;
+}
+
+// EChatSubItemType_MultiRichMedia = 24 公众平台使用
+message MultiRichMediaItemPB
+{
+    required IMChatRichMediaItemPB first = 1; // 第一条新闻
+    repeated IMChatRichMediaItemPB others = 2; // 剩余新闻
+}
+
+message IceServerPB
+{
+    required string uri=1;
+    optional string username=2;
+    optional string password=3;
+}

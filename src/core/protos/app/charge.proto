@@ -1,0 +1,44 @@
+package app;
+option java_package="com.messenger.javaserver.charge.proto";
+//option optimize_for = LITE_RUNTIME;
+import "app/mobrequestbase.proto";
+
+message CashChargeProductPB{
+    required string product_id = 1; //商品id
+    required uint64 vip_duration = 2; //vip持续时间，单位：月
+    required string price = 3; //单价，单位美元，精度问题用string
+    required int32  channel = 4; //渠道，0:ios, 1:android
+    optional string tag = 5; //产品标记，如hot商品
+    optional string product_desc = 6; //产品说明，如优惠活动
+    optional int64 save = 7; //节省的百分比
+}
+
+message GetCashChargeProductListRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required int32 device_type = 3; //0:ios, 1:android
+}
+
+message GetCashChargeProductListResponse {
+    required int32 ret = 1;
+    repeated CashChargeProductPB product_list = 2; //商品列表
+    optional string androidPayload = 3; //google play payload, 用于标记用户
+}
+
+message VerifyOrderRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required int32  device_type = 3; //0:ios, 1:android
+    required string receipt = 4;  //回执
+}
+
+message VerifyOrderResponse {
+    required int32 ret = 1;
+    optional int64 vip_expire_time = 2; //充值后的到期时间
+}
+
+
+service ChargeService {
+    rpc getCashChargeProductList(GetCashChargeProductListRequest) returns(GetCashChargeProductListResponse);
+    rpc verifyOrder(VerifyOrderRequest) returns(VerifyOrderResponse);
+}

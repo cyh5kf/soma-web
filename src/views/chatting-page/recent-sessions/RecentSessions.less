@@ -1,0 +1,136 @@
+@import "../../../components/_variables";
+@import "../../../components/_mixins";
+
+.recent-sessions {
+  @searcher-height: 53px;
+  position: relative;
+
+  .comp-searcher {
+    position: absolute;
+    width: 100%;
+  }
+
+  .empty-session-tip {
+    padding: 160px 30px 0;
+    color: @color-light-text-secondary;
+    text-align: center;
+    .empty-icon {
+      display: block;
+      width: 140px;
+      height: 140px;
+      margin: 0 auto 19px;
+      background: url(images/ic_tapon_add.png) center/contain no-repeat;
+    }
+  }
+
+  .session-list {
+    height: 100%;
+    overflow: auto;
+    .session-item {
+      display: flex;
+      align-items: center;
+      height: 74px;
+      margin-top: -1px;
+      cursor: pointer;
+
+      &:hover {
+        background-color: @color-bg-light;
+      }
+
+      &.selected {
+        background-color: @color-bg-session-selected;
+      }
+
+      .accountAvatar {
+        flex-shrink: 0;
+        margin: 0 10px 0 15px;
+      }
+
+      &.group-session .session-info .session-first-row .session-name {
+        background: url(images/ic_group_black_16px.png) left center no-repeat;
+        background-size: 16px;
+        padding-left: 20px;
+      }
+      .session-info {
+        flex-grow: 1;
+        height: 100%;
+        overflow: hidden;
+        padding: 18px 15px 18px 0;
+        white-space: nowrap;
+        border-bottom: 1px solid @color-split-line;
+
+        .session-first-row {
+          display: flex;
+          line-height: 19px;
+          .sessionName-container {
+            flex-grow: 1;
+            display: flex;
+            overflow: hidden;
+            .session-name {
+              //font-weight: 500;
+              .single-line-text();
+              color: @color-light-text-primary;
+              flex-shrink: 1;
+            }
+            .icon-mute {
+              background: url(images/ic_volume_off_black_16px.png) no-repeat;
+              width: 16px;
+              height: 16px;
+              background-size: cover;
+              margin: 0 4px;
+              flex-shrink: 0;
+            }
+
+          }
+          .session-last-msg-time {
+            color: @color-light-text-hint;
+            font-size: 12px;
+          }
+
+        }
+
+        .session-second-row {
+          display: flex;
+          align-items: center;
+          margin-top: 3px;
+
+          .session-last-msg {
+            flex-grow: 1;
+          }
+
+          .session-unread-msg-cnt {
+            flex-grow: 0;
+            flex-shrink: 0;
+            min-width: 16px;
+            height: 16px;
+            line-height: 15px;
+            padding: 1px 5px 0;
+            margin-left: 10px;
+            font-size: 12px;
+            text-align: center;
+            border-radius: 8px;
+            color: @color-white;
+            background-color: @color-red;
+          }
+          .tb-more-session-actions {
+            transition-property: width margin-left;
+            transition-duration: 200ms;
+            flex-shrink: 0;
+            width: 10px;
+            height: 6px;
+            margin-left: 7px;
+            background: url(../../../images/ic_next_pressed_6px.png) center/contain no-repeat;
+            .enlarge-icon-clickable-area();
+            cursor: pointer;
+          }
+        }
+      }
+
+      &:not(:hover) .tb-more-session-actions:not(.open) {
+        visibility: hidden;
+        margin-left: 0;
+        width: 0;
+      }
+    }
+  }
+}

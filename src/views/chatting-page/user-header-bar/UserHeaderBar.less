@@ -1,0 +1,29 @@
+@import "../../../components/_variables";
+@import "../../../components/_mixins";
+
+.user-header-bar {
+  background-color: @color-blue-dark;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 15px;
+
+  .user-logo.accountAvatar {
+    cursor: pointer;
+    width: 40px;
+    height: 40px;
+    line-height: 40px;
+  }
+
+  .tb-more-actions {
+    .circle(36px);
+    background: url(images/add.png) center/contain no-repeat;
+    cursor: pointer;
+    &:hover {
+      background-color: @color-bg-tb-hover;
+    }
+    &:active {
+      background-color: @color-bg-tb-active;
+    }
+  }
+}

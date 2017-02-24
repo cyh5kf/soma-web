@@ -1,0 +1,142 @@
+@import "../../../../components/_variables";
+
+@TAB_HEIGHT:50px;
+
+@TAB_CONTENT_HEIGHT:230px;
+
+.MessageInputView{
+
+  .emojifyPanel{
+    height: 0px;
+    width: 100%;
+    background-color: #f0f0f0;
+    moz-user-select: -moz-none;
+    -moz-user-select: none;
+    -o-user-select:none;
+    -khtml-user-select:none;
+    -webkit-user-select:none;
+    -ms-user-select:none;
+    user-select:none;
+    overflow: hidden;
+    transition: height 200ms ease;
+
+    &.emojifyPanelVisible{
+      height: @TAB_CONTENT_HEIGHT + 54px;
+    }
+
+
+    .tabList{
+      height: @TAB_HEIGHT;
+      line-height: @TAB_HEIGHT;
+      text-align: center;
+      background-color: #fff;
+      display: flex;
+      flex-direction: row;
+    }
+
+    .tabButton{
+      flex-shrink: 1;
+      flex-basis: 98px;
+      flex-grow: 0;
+      height: @TAB_HEIGHT;
+      font-size: 12px;
+      cursor: pointer;
+      border-bottom: 3px solid #ffffff;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+
+
+      &.active{
+        border-bottom: 3px solid #009BDF;
+      }
+
+
+      .tab-icon{
+        width: 24px;
+        height: 24px;
+        background-size: cover;
+        //margin: 0 auto;
+        //margin-top: 13px;
+      }
+      .tab-icon-Recent{
+        background-image: url("../images/ic_emoji_resent_nomal.png");
+      }
+      .tab-icon-People{
+        background-image: url("../images/ic_emoji_face_nomal.png");
+      }
+      .tab-icon-Nature{
+        background-image: url("../images/ic_emoji_flower_nomal.png");
+      }
+      .tab-icon-Objects{
+        background-image: url("../images/ic_emoji_notis_nomal.png");
+      }
+      .tab-icon-Objects{
+        background-image: url("../images/ic_emoji_notis_nomal.png");
+      }
+      .tab-icon-Places{
+        background-image: url("../images/ic_emoji_car_nomal.png");
+      }
+      .tab-icon-Symbols{
+        background-image: url("../images/ic_emoji_other_nomal.png");
+      }
+
+
+      &.active{
+        .tab-icon-Recent{
+          background-image: url("../images/ic_emoji_resent_pressed.png");
+        }
+        .tab-icon-People{
+          background-image: url("../images/ic_emoji_face_pressed.png");
+        }
+        .tab-icon-Nature{
+          background-image: url("../images/ic_emoji_flower_pressed.png");
+        }
+        .tab-icon-Objects{
+          background-image: url("../images/ic_emoji_notis_pressed.png");
+        }
+        .tab-icon-Objects{
+          background-image: url("../images/ic_emoji_notis_pressed.png");
+        }
+        .tab-icon-Places{
+          background-image: url("../images/ic_emoji_car_pressed.png");
+        }
+        .tab-icon-Symbols{
+          background-image: url("../images/ic_emoji_other_pressed.png");
+        }
+      }
+
+
+
+    }
+
+
+
+    .tabContentList{
+      height: @TAB_CONTENT_HEIGHT;
+      opacity: 1;
+      overflow-y: scroll;
+      overflow-x: hidden;
+      padding: 8px 0 10px;
+      width: 100%;
+      box-sizing: content-box;
+      background-color: @color-bg-emoji-panel;
+    }
+
+    .tabContent{
+      display: none;
+      background-color: @color-bg-emoji-panel;
+
+      &.active{
+        display: block;
+      }
+
+      .emoji{
+        margin: 6px;
+        cursor: pointer;
+      }
+    }
+
+  }
+}

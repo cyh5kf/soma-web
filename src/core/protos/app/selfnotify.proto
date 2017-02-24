@@ -1,0 +1,35 @@
+package app;
+option java_package="com.messenger.javaserver.selfnotify.proto";
+
+//option optimize_for = LITE_RUNTIME;
+//option cc_generic_services = false;
+//option java_generic_services = false;
+
+enum SelfNotifyType {
+    SELF_NOTIFY_TYPE_SEND_P2P_MESSAGE = 1; //对应SendP2PMessageRequest
+    SELF_NOTIFY_TYPE_MARK_P2P_READ = 5; //对应markP2PReadRequest
+
+    SELF_NOTIFY_TYPE_SEND_GROUP_MESSAGE = 100; //对应SendGroupMessageRequest
+    SELF_NOTIFY_TYPE_MARK_GROUP_READ = 101; //对应markGroupReadRequest
+
+    SELF_NOTIFY_TYPE_UPDATE_USER_NAME = 200; //对应UpdateNameRequest
+    SELF_NOTIFY_TYPE_UPDATE_USER_AVATAR = 201; //对应UpdateAvatarRequest
+    SELF_NOTIFY_TYPE_UPDATE_USER_WHATSUP = 202; //对应UpdateWhatsUpRequest
+    SELF_NOTIFY_TYPE_UPDATE_USER_MUTE = 203; //对应UpdateUserMuteRequest
+    SELF_NOTIFY_TYPE_UPDATE_USER_HAVE_READ_PRIVACY = 204; //对应UpdateHaveReadPrivacyRequest
+
+    SELF_NOTIFY_TYPE_UPDATE_USER_GROUP_MUTE = 205; //对应MarkSilentRequest groupserver.proto
+    SELF_NOTIFY_TYPE_ADD_GROUP_TO_FAVORITE = 206; //对应removeGroupFromFavorite
+    SELF_NOTIFY_TYPE_REMOVE_GROUP_FROM_FAVORITE = 207; //对应removeGroupFromFavorite
+
+    SELF_NOTIFY_TYPE_UPDATE_MOB_STAT = 208; //对应weblogin.updateMobStat
+
+}
+
+//对应ESessionType中的ESessionType_SELF_NOTIFY
+message SelfNotifyPB {
+    required int32 notify_type = 1; //参见SelfNotifyType
+    required bytes request_data = 2; //对应的请求PB
+    required bytes response_data = 3; //对应的应答PB
+}
+

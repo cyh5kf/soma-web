@@ -1,0 +1,46 @@
+@import "../../../../components/_variables";
+@import "../../../../components/_mixins";
+
+.RightPanelHeader {
+  background-color: #0099CC;
+  height: 59px;
+  position: relative;
+  color: #ffffff;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  flex-shrink: 0;
+  border-left: 1px solid @color-split-line-header;
+
+  .close {
+    margin-left: 15px;
+    cursor: pointer;
+  }
+
+  .title {
+    margin-left: 20px;
+    font-size: 16px;
+  }
+
+  .children {
+    flex-shrink: 1;
+    flex-grow: 1;
+    margin-right: 15px;
+  }
+
+  .ic_delete_white {
+    background: url("../../../../images/ic_delete_white_36px.png") no-repeat;
+    background-size: cover;
+    .circle(36px);
+    &:hover {
+      background-color: @color-bg-tb-hover;
+    }
+  }
+
+  .ic_back_white {
+    background: url("../../../../images/ic_back_white_36px.png") no-repeat;
+    background-size: cover;
+    width: 36px;
+    height: 36px;
+  }
+}

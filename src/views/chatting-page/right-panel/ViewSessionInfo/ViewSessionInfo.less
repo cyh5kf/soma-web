@@ -1,0 +1,82 @@
+@import "../../../../components/_variables";
+
+.ViewSessionInfo {
+  background-color: #f7f7f7 !important;
+  position: relative;
+
+  .content {
+
+    .accountAvatar {
+      width: 80px;
+      height: 80px;
+      line-height: 80px;
+      font-size: 25px;
+      margin: 20px auto 10px auto
+    }
+
+    .avatar{
+
+    }
+
+    .session-name {
+      color: #000;
+      font-size: 20px;
+      text-align: center;
+      white-space:nowrap;
+      overflow:hidden;
+      text-overflow:ellipsis;
+      margin: 0 67px;
+    }
+
+    .session-last-time {
+      font-size: 14px;
+      color: fade(#000, 54);
+      text-align: center;
+      margin-top: 5px;
+    }
+
+    .infoItem {
+      .title {
+        &.click_true {
+          cursor: pointer;
+          &:hover {
+            //text-decoration: underline;
+            color: #0099CC;
+          }
+        }
+      }
+
+      .display-text {
+        max-width: 80%;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        display: block!important;
+      }
+    }
+
+    .ic_add_white {
+      width: 12px;
+      height: 12px;
+      background: url("../images/ic_add_white_12px.png");
+      background-size: cover;
+      display: inline-block;
+      margin-right: 10px;
+    }
+
+
+  }
+
+
+
+  .comp-blue-loading{
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    margin-left: -18px;
+    margin-top: -18px;
+  }
+
+
+
+}

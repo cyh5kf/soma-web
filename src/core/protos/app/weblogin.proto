@@ -1,0 +1,83 @@
+package app;
+option java_package="com.messenger.javaserver.weblogin.proto";
+//option optimize_for = LITE_RUNTIME;
+import "app/mobrequestbase.proto";
+
+
+//登录二维码数据结构，pb序列化后base64编码，然后产生二维码
+message WebLoginQrCodePB {
+    required bytes pub_key = 1; //ecc public key
+    required bytes pri_key = 2; //ecc private key
+    required string login_key = 3;
+}
+
+//预登录时服务器通知web端login key
+message WebLoginPrepareInfoPB {
+    required string login_key = 1;
+}
+
+//确定登录之前服务器通知web端的用户信息
+message WebLoginUserInfoPB {
+    required uint64 uid = 1;
+    required string avatar = 2;
+    required string lang = 3;
+}
+
+//确定登录之后服务器通知web端的登录信息
+message WebLoginTokenInfoPB {
+    required uint64 uid = 1;
+    required string token = 2;
+    required uint64 version = 3; // ecc 密钥对的时间戳
+}
+
+//通知Web端退出登陆
+message WebLogoutPB {
+    required uint64 uid = 1;
+}
+
+//根据loginkey查询web登录信息
+message WebLoginCheckRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required string login_key = 3; //分配给web client的登录key
+}
+
+message WebLoginCheckResponse {
+    required int32 ret = 1;
+}
+
+//真正确认web登录
+message WebLoginConfirmRequest {
+    optional app.MobRequestBase baseinfo = 1;
+    required uint64 uid = 2;
+    required string login_key = 3; //分配给web client的登录key
+}
+
+message WebLoginConfirmResponse {
+    required int32 ret = 1;
+}
+
+//清除auth信息
+message WebRemoveAuthRequest {
+    required uint64 uid = 2;
+}
+message WebRemoveAuthResponse {
+    required int32 ret = 1;
+}
+
+//更新手机端状态
+message UpdateMobStatRequest {
+    required uint64 uid = 2;
+    required bool stat = 3; // false: offline; true: online
+}
+message UpdateMobStatResponse {
+    required int32 ret = 1;
+}
+
+//weblogin.[methodName]
+service WebLoginService {
+    rpc webLoginCheck(WebLoginCheckRequest) returns(WebLoginCheckResponse);
+    rpc webLoginConfirm(WebLoginConfirmRequest) returns(WebLoginConfirmResponse);
+    rpc webRemoveAuth(WebRemoveAuthRequest) returns(WebRemoveAuthResponse);
+    rpc updateMobStat(UpdateMobStatRequest) returns(UpdateMobStatResponse);
+}

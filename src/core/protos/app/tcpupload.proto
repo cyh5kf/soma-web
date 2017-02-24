@@ -1,0 +1,68 @@
+package app;
+option java_package="com.messenger.javaserver.tcpupload.proto";
+
+enum UPLOAD_METHOD_TYPE {
+    UM_UPLOAD = 1;
+    UM_GETPOS = 2;
+    UM_GETKEY = 3;
+    UM_ACQUIRE = 4;
+}
+
+// Request : 16bit header length + 16bit req len + MessageHeader + Request[ + oct stream]
+// Response: 16bit header length + 16bit rsp len + MessageHeader + Response 
+message MessageHeader {
+    required int32 method = 1;
+    required int32 crc32 = 2; // request/response + method
+    required bytes user_ecckey = 3;//32
+    required bytes srv_ecckey = 4;//32
+}
+
+// all requests & responses are encrypted, except GetServerKey
+message UploadRequest {
+    required int64 uid = 1; // 32
+	required string fuuid = 2;//32
+	required int64 flen = 3;//4
+	required bytes fmd5 = 4;//17
+	required string ftype = 5;
+	optional bool isperm = 6;//1
+	optional int64 offset = 7;//
+	repeated string extHeader = 8; // format <key>:<value>
+}
+
+message UploadResponse {
+    required int32 ret = 1;
+    required string fuuid = 2;
+    optional bytes newecckey = 3; // eccpubkey
+    optional string url = 4;
+    optional int64 offset = 5;
+    repeated string extData = 6; // format <key>:<value>
+}
+
+message GetUploadPositionRequest {
+    required string fuuid = 1;
+}
+
+message GetUploadPositionResponse {
+    required int32 ret = 1;
+    required int64 fpos = 2;
+}
+
+message AcquireFileRequest {
+    required string fuuid = 1;
+}
+
+message AcquireFileResponse {
+    required int32 ret = 1;
+    required int64 fpos = 2;
+}
+
+message GetServerKeyRequest {
+    required string uuid = 1;
+}
+
+message GetServerKeyResponse {
+    required int32 ret = 1;
+    required string uuid = 2;
+    optional bytes newecckey = 3;
+}
+
